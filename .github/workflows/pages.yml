@@ -37,6 +37,13 @@ jobs:
             echo "site_path=." >> "$GITHUB_ENV"
           fi
 
+      - name: Corregir posicion de banners
+        run: |
+          if [ -f "${site_path}/blog-editor.css" ] && [ -f "${site_path}/image-position-fix.css" ]; then
+            printf '\n\n/* Correcciones de posicion inyectadas al publicar */\n' >> "${site_path}/blog-editor.css"
+            cat "${site_path}/image-position-fix.css" >> "${site_path}/blog-editor.css"
+          fi
+
       - name: Subir sitio
         uses: actions/upload-pages-artifact@v3
         with:
