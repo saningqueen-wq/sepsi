@@ -17,7 +17,7 @@
 
     const YOU_SAVE_ME_THEME = {
         background: "#aeaeb3",
-        surface: "#515156",
+        surface: "##aeaeb3",
         text: "#f7f7f8",
         accent: "#aeaeb3"
     };
