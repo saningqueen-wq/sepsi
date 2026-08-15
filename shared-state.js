@@ -127,79 +127,6 @@
         });
     }
 
-    function hexToRgb(hex) {
-        const value = String(hex || "").replace("#", "");
-        if (!/^[0-9a-f]{6}$/i.test(value)) return { r: 47, g: 47, b: 49 };
-        return {
-            r: parseInt(value.slice(0, 2), 16),
-            g: parseInt(value.slice(2, 4), 16),
-            b: parseInt(value.slice(4, 6), 16)
-        };
-    }
-
-    function recolorSaveMeBanner(src) {
-        return new Promise(function (resolve) {
-            const image = new Image();
-
-            image.onload = function () {
-                try {
-                    const canvas = document.createElement("canvas");
-                    canvas.width = image.naturalWidth || image.width;
-                    canvas.height = image.naturalHeight || image.height;
-                    const context = canvas.getContext("2d", { willReadFrequently: true });
-                    if (!context || !canvas.width || !canvas.height) {
-                        resolve(src);
-                        return;
-                    }
-
-                    context.drawImage(image, 0, 0);
-                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                    const pixels = imageData.data;
-                    const target = hexToRgb(YOU_SAVE_ME_THEME.background);
-
-                    // Los banners de Save Me tienen un fondo RGB(174,174,179).
-                    // Se cambia solo ese gris (y sus pequeñas variaciones por compresión)
-                    // para conservar intactos personajes, textos y fotografías.
-                    for (let index = 0; index < pixels.length; index += 4) {
-                        const r = pixels[index];
-                        const g = pixels[index + 1];
-                        const b = pixels[index + 2];
-                        const alpha = pixels[index + 3];
-                        if (alpha < 20) continue;
-
-                        const closeToOriginalGray =
-                            Math.abs(r - 174) <= 14 &&
-                            Math.abs(g - 174) <= 14 &&
-                            Math.abs(b - 179) <= 14;
-
-                        const neutralGray =
-                            Math.max(r, g, b) - Math.min(r, g, b) <= 9 &&
-                            r >= 164 && r <= 184 &&
-                            g >= 164 && g <= 184 &&
-                            b >= 164 && b <= 189;
-
-                        if (closeToOriginalGray || neutralGray) {
-                            pixels[index] = target.r;
-                            pixels[index + 1] = target.g;
-                            pixels[index + 2] = target.b;
-                        }
-                    }
-
-                    context.putImageData(imageData, 0, 0);
-                    resolve(canvas.toDataURL("image/png"));
-                } catch (error) {
-                    resolve(src);
-                }
-            };
-
-            image.onerror = function () {
-                resolve(src);
-            };
-
-            image.src = src;
-        });
-    }
-
     function installYouSaveMeBackgroundFix() {
         if (document.getElementById("youSaveMeBackgroundFix")) return;
         const style = document.createElement("style");
@@ -302,11 +229,10 @@
                 }
             ];
 
-            for (const banner of saveMeBanners) {
-                banner.src = await recolorSaveMeBanner(banner.src);
+            saveMeBanners.forEach(function (banner) {
                 banner.layout = "free";
                 insertImageAfterText(saveMeBlog, banner);
-            }
+            });
 
             applySaveMeTheme(saveMeBlog);
         }
