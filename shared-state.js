@@ -16,7 +16,7 @@
     };
 
     const YOU_SAVE_ME_THEME = {
-        background: "#2f2f31",
+        background: "#aeaeb3",
         surface: "#515156",
         text: "#f7f7f8",
         accent: "#aeaeb3"
