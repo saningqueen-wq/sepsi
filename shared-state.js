@@ -23,67 +23,19 @@
     };
 
     const OVERRIDES_KEY = "amino-blog-overrides-v2";
-    const DRAFTS_KEY = "amino-blog-drafts-v2";
-
-    function cloneTheme(theme) {
-        return Object.assign({}, theme);
-    }
 
     function readOverrides() {
         try {
             const raw = localStorage.getItem(OVERRIDES_KEY);
             if (!raw) return {};
             const parsed = JSON.parse(raw);
-            return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+            return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+                ? parsed
+                : {};
         } catch (error) {
             return {};
         }
     }
-
-    /*
-     * Muy importante: todo guardado que pase por localStorage también pasa
-     * por aquí. Así el editor nunca puede volver a guardar otro tema para
-     * You Save Me por accidente.
-     */
-    const nativeSetItem = Storage.prototype.setItem;
-
-    Storage.prototype.setItem = function (key, value) {
-        let finalValue = value;
-
-        if (this === window.localStorage && key === OVERRIDES_KEY) {
-            try {
-                const parsed = JSON.parse(String(value));
-                if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
-                    parsed["you-save-me"] = Object.assign({}, parsed["you-save-me"] || {}, {
-                        theme: cloneTheme(YOU_SAVE_ME_THEME),
-                        contentVersion: 1
-                    });
-                    finalValue = JSON.stringify(parsed);
-                }
-            } catch (error) {}
-        }
-
-        /* También corrige el borrador del editor para que al recuperarlo no
-           reaparezca el tema anterior. */
-        if (this === window.localStorage && key === DRAFTS_KEY) {
-            try {
-                const drafts = JSON.parse(String(value));
-                if (drafts && typeof drafts === "object" && !Array.isArray(drafts)) {
-                    Object.keys(drafts).forEach(function (draftKey) {
-                        const draft = drafts[draftKey];
-                        const state = draft && draft.state;
-                        if (state && state.id === "you-save-me") {
-                            state.theme = cloneTheme(YOU_SAVE_ME_THEME);
-                            state.contentVersion = 1;
-                        }
-                    });
-                    finalValue = JSON.stringify(drafts);
-                }
-            } catch (error) {}
-        }
-
-        return nativeSetItem.call(this, key, finalValue);
-    };
 
     function saveOverrides(value) {
         try {
@@ -97,25 +49,26 @@
     function keepFixedThemes() {
         const overrides = readOverrides();
 
-        overrides["you-are-my-reality"] = Object.assign({}, overrides["you-are-my-reality"] || {}, {
-            theme: cloneTheme(RED_THEME),
-            contentVersion: 2
-        });
+        overrides["you-are-my-reality"] = Object.assign(
+            {}, overrides["you-are-my-reality"] || {},
+            { theme: RED_THEME, contentVersion: 2 }
+        );
 
-        overrides["my-world-with-you"] = Object.assign({}, overrides["my-world-with-you"] || {}, {
-            theme: cloneTheme(RED_THEME),
-            contentVersion: 2
-        });
+        overrides["my-world-with-you"] = Object.assign(
+            {}, overrides["my-world-with-you"] || {},
+            { theme: RED_THEME, contentVersion: 2 }
+        );
 
-        overrides["happy-birthday-my-love"] = Object.assign({}, overrides["happy-birthday-my-love"] || {}, {
-            theme: cloneTheme(HAPPY_BIRTHDAY_THEME),
-            contentVersion: 2
-        });
+        overrides["happy-birthday-my-love"] = Object.assign(
+            {}, overrides["happy-birthday-my-love"] || {},
+            { theme: HAPPY_BIRTHDAY_THEME, contentVersion: 2 }
+        );
 
-        overrides["you-save-me"] = Object.assign({}, overrides["you-save-me"] || {}, {
-            theme: cloneTheme(YOU_SAVE_ME_THEME),
-            contentVersion: 1
-        });
+        /* Mantiene contenido/portada/bloques y solo fija el tema de You Save Me. */
+        overrides["you-save-me"] = Object.assign(
+            {}, overrides["you-save-me"] || {},
+            { theme: YOU_SAVE_ME_THEME, contentVersion: 1 }
+        );
 
         saveOverrides(overrides);
     }
@@ -164,102 +117,75 @@
         };
 
         const index = blog.blocks.findIndex(function (block) {
-            return block && typeof block.text === "string" && block.text.indexOf(banner.after) >= 0;
+            return block &&
+                typeof block.text === "string" &&
+                block.text.indexOf(banner.after) >= 0;
         });
 
         if (index >= 0) blog.blocks.splice(index + 1, 0, imageBlock);
         else blog.blocks.push(imageBlock);
     }
 
-    function applySaveMeThemeToData(blog) {
-        if (blog) {
-            blog.theme = cloneTheme(YOU_SAVE_ME_THEME);
-            blog.contentVersion = 1;
-        }
-    }
-
-    function forceYouSaveMeFlatColor() {
-        const roots = document.querySelectorAll('[data-blog-id="you-save-me"]');
-
-        roots.forEach(function (root) {
-            root.style.setProperty("--blog-bg", "#aeaeb3", "important");
-            root.style.setProperty("--blog-surface", "#aeaeb3", "important");
-            root.style.setProperty("--blog-text", "#ffffff", "important");
-            root.style.setProperty("--blog-accent", "#aeaeb3", "important");
-            root.style.setProperty("background", "#aeaeb3", "important");
-            root.style.setProperty("background-color", "#aeaeb3", "important");
-
-            const sameGraySelectors = [
-                ".amino-reader-header",
-                ".amino-reader-author",
-                ".amino-reader-body",
-                ".amino-reader-content",
-                ".blog-modal-body",
-                ".blog-modal-header",
-                ".blog-modal-meta",
-                ".amino-content-paragraph",
-                ".amino-content-heading",
-                ".amino-content-quote",
-                ".amino-content-divider",
-                ".amino-content-banner",
-                ".amino-content-image-free",
-                ".blog-modal-comments"
-            ].join(",");
-
-            root.querySelectorAll(sameGraySelectors).forEach(function (element) {
-                element.style.setProperty("background", "#aeaeb3", "important");
-                element.style.setProperty("background-color", "#aeaeb3", "important");
-                element.style.setProperty("box-shadow", "none", "important");
-            });
-
-            root.querySelectorAll(
-                ".amino-content-paragraph,.amino-content-heading,.amino-content-quote"
-            ).forEach(function (element) {
-                element.style.setProperty("color", "#ffffff", "important");
-                element.style.setProperty("border-color", "#aeaeb3", "important");
-            });
-        });
-    }
-
-    function installYouSaveMeBackgroundFix() {
-        if (document.getElementById("youSaveMeBackgroundFix")) return;
+    /*
+     * IMPORTANTE:
+     * El gris de You Save Me se aplica SOLO al lector abierto y a la vista previa.
+     * No toca .managed-blog-card, así que la tarjeta del perfil conserva su diseño.
+     */
+    function installYouSaveMeReaderTheme() {
+        if (document.getElementById("youSaveMeReaderTheme")) return;
 
         const style = document.createElement("style");
-        style.id = "youSaveMeBackgroundFix";
+        style.id = "youSaveMeReaderTheme";
         style.textContent = `
-            [data-blog-id="you-save-me"],
-            [data-blog-id="you-save-me"] .amino-reader-header,
-            [data-blog-id="you-save-me"] .amino-reader-author,
-            [data-blog-id="you-save-me"] .amino-reader-body,
-            [data-blog-id="you-save-me"] .amino-reader-content,
-            [data-blog-id="you-save-me"] .blog-modal-body,
-            [data-blog-id="you-save-me"] .blog-modal-header,
-            [data-blog-id="you-save-me"] .blog-modal-meta,
-            [data-blog-id="you-save-me"] .amino-content-paragraph,
-            [data-blog-id="you-save-me"] .amino-content-heading,
-            [data-blog-id="you-save-me"] .amino-content-quote,
-            [data-blog-id="you-save-me"] .amino-content-divider,
-            [data-blog-id="you-save-me"] .amino-content-banner,
-            [data-blog-id="you-save-me"] .amino-content-banner.amino-content-image-free,
-            [data-blog-id="you-save-me"] .blog-modal-comments {
+            .modal-blog[data-blog-id="you-save-me"],
+            .editor-preview-card[data-blog-id="you-save-me"] {
+                --blog-bg: #aeaeb3 !important;
+                --blog-surface: #aeaeb3 !important;
+                --blog-text: #ffffff !important;
+                --blog-accent: #aeaeb3 !important;
                 background: #aeaeb3 !important;
                 background-color: #aeaeb3 !important;
             }
 
-            [data-blog-id="you-save-me"] .amino-content-paragraph,
-            [data-blog-id="you-save-me"] .amino-content-heading,
-            [data-blog-id="you-save-me"] .amino-content-quote {
+            .modal-blog[data-blog-id="you-save-me"] .amino-reader-header,
+            .modal-blog[data-blog-id="you-save-me"] .amino-reader-author,
+            .modal-blog[data-blog-id="you-save-me"] .amino-reader-body,
+            .modal-blog[data-blog-id="you-save-me"] .amino-reader-content,
+            .modal-blog[data-blog-id="you-save-me"] .blog-modal-body,
+            .modal-blog[data-blog-id="you-save-me"] .blog-modal-header,
+            .modal-blog[data-blog-id="you-save-me"] .blog-modal-meta,
+            .modal-blog[data-blog-id="you-save-me"] .amino-content-paragraph,
+            .modal-blog[data-blog-id="you-save-me"] .amino-content-heading,
+            .modal-blog[data-blog-id="you-save-me"] .amino-content-quote,
+            .modal-blog[data-blog-id="you-save-me"] .amino-content-divider,
+            .modal-blog[data-blog-id="you-save-me"] .amino-content-banner,
+            .modal-blog[data-blog-id="you-save-me"] .amino-content-image-free,
+            .modal-blog[data-blog-id="you-save-me"] .blog-modal-comments,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-reader-body,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-paragraph,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-heading,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-quote,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-divider,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-banner,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-image-free {
+                background: #aeaeb3 !important;
+                background-color: #aeaeb3 !important;
+                box-shadow: none !important;
+            }
+
+            .modal-blog[data-blog-id="you-save-me"] .amino-content-paragraph,
+            .modal-blog[data-blog-id="you-save-me"] .amino-content-heading,
+            .modal-blog[data-blog-id="you-save-me"] .amino-content-quote,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-paragraph,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-heading,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-quote {
                 color: #ffffff !important;
-                box-shadow: none !important;
+                border-color: #aeaeb3 !important;
             }
 
-            [data-blog-id="you-save-me"] .amino-content-banner,
-            [data-blog-id="you-save-me"] .amino-content-banner.amino-content-image-free {
-                box-shadow: none !important;
-            }
-
-            /* No altera los banners. */
-            [data-blog-id="you-save-me"] img {
+            /* Banners intactos: no filtro, no opacidad, no recolor. */
+            .modal-blog[data-blog-id="you-save-me"] img,
+            .editor-preview-card[data-blog-id="you-save-me"] img {
                 filter: none !important;
                 opacity: 1 !important;
             }
@@ -267,36 +193,13 @@
         document.head.appendChild(style);
     }
 
-    installYouSaveMeBackgroundFix();
+    installYouSaveMeReaderTheme();
 
-    let forceQueued = false;
-    function queueForceYouSaveMe() {
-        if (forceQueued) return;
-        forceQueued = true;
-        requestAnimationFrame(function () {
-            forceQueued = false;
-            forceYouSaveMeFlatColor();
-        });
-    }
-
-    const observer = new MutationObserver(queueForceYouSaveMe);
-    observer.observe(document.documentElement, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ["data-blog-id", "data-blog-variant", "style", "class"]
-    });
-
-    /*
-     * Detectamos cuándo el editor abierto corresponde a You Save Me.
-     * Antes de que blog-editor.js ejecute su Guardar, enviamos los cuatro
-     * colores correctos mediante sus propios eventos input. Así el payload
-     * que crea persistEditor ya sale correcto desde origen.
-     */
-    let editingYouSaveMe = false;
-
-    function forceEditorSaveMeTheme() {
-        if (!editingYouSaveMe) return;
+    function forceSaveMeEditorColors() {
+        const titleInput = document.getElementById("newPostTitle");
+        if (!titleInput || titleInput.value.trim().toLowerCase() !== "you save me") {
+            return false;
+        }
 
         const values = [
             ["blogBackgroundColor", "#aeaeb3"],
@@ -308,60 +211,30 @@
         values.forEach(function (entry) {
             const input = document.getElementById(entry[0]);
             if (!input) return;
-            if (input.value.toLowerCase() !== entry[1]) {
-                input.value = entry[1];
-                input.dispatchEvent(new Event("input", { bubbles: true }));
-            }
+            input.value = entry[1];
+            /* Actualiza editorState dentro de blog-editor.js antes de persistEditor(). */
+            input.dispatchEvent(new Event("input", { bubbles: true }));
         });
+
+        return true;
     }
 
+    /*
+     * Se ejecuta en capture: ocurre ANTES del listener de Guardar de blog-editor.js.
+     * Así el payload ya sale con #AEAEB3 y no se corrige tarde.
+     */
     document.addEventListener("click", function (event) {
-        const editCardButton = event.target && event.target.closest
-            ? event.target.closest('[data-feed-action="edit"]')
-            : null;
-
-        if (editCardButton) {
-            const card = editCardButton.closest(".managed-blog-card");
-            editingYouSaveMe = Boolean(card && card.dataset.blogId === "you-save-me");
-            if (editingYouSaveMe) {
-                setTimeout(forceEditorSaveMeTheme, 0);
-            }
-            return;
-        }
-
-        const readerEdit = event.target && event.target.closest
-            ? event.target.closest("#blogEditBtn")
-            : null;
-
-        if (readerEdit) {
-            const readerRoot = document.querySelector('.modal-blog[data-blog-id="you-save-me"]');
-            editingYouSaveMe = Boolean(readerRoot);
-            if (editingYouSaveMe) {
-                setTimeout(forceEditorSaveMeTheme, 0);
-            }
-            return;
-        }
-
-        const saveButton = event.target && event.target.closest
+        const button = event.target && event.target.closest
             ? event.target.closest("#publishPost")
             : null;
+        if (!button) return;
 
-        if (saveButton && editingYouSaveMe) {
-            /* Este evento está en capture: ocurre ANTES del persistEditor. */
-            forceEditorSaveMeTheme();
+        const isSaveMe = forceSaveMeEditorColors();
+        if (!isSaveMe) return;
 
-            setTimeout(function () {
-                const saveMeBlog = findBlog("you-save-me");
-                applySaveMeThemeToData(saveMeBlog);
-                keepFixedThemes();
-                queueForceYouSaveMe();
-            }, 0);
-
-            setTimeout(function () {
-                keepFixedThemes();
-                queueForceYouSaveMe();
-            }, 150);
-        }
+        /* Respaldo después del guardado, sin alterar textos ni bloques. */
+        setTimeout(keepFixedThemes, 0);
+        setTimeout(keepFixedThemes, 150);
     }, true);
 
     async function installBlogExtras() {
@@ -457,20 +330,14 @@
                 insertImageAfterText(saveMeBlog, banner);
             });
 
-            applySaveMeThemeToData(saveMeBlog);
-            keepFixedThemes();
-            queueForceYouSaveMe();
+            saveMeBlog.theme = Object.assign({}, YOU_SAVE_ME_THEME);
         }
     }
 
     if (document.readyState === "complete") {
         installBlogExtras();
-        queueForceYouSaveMe();
     } else {
-        window.addEventListener("load", function () {
-            installBlogExtras();
-            queueForceYouSaveMe();
-        }, { once: true });
+        window.addEventListener("load", installBlogExtras, { once: true });
     }
 
     if (String(location.hash || "").indexOf("#amino-share=") === 0) {
