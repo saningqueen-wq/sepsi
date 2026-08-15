@@ -15,7 +15,6 @@
         accent: "#e756bd"
     };
 
-    /* You Save Me: todo el fondo usa exactamente este gris. */
     const YOU_SAVE_ME_THEME = {
         background: "#aeaeb3",
         surface: "#aeaeb3",
@@ -30,9 +29,7 @@
             const raw = localStorage.getItem(OVERRIDES_KEY);
             if (!raw) return {};
             const parsed = JSON.parse(raw);
-            return parsed && typeof parsed === "object" && !Array.isArray(parsed)
-                ? parsed
-                : {};
+            return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
         } catch (error) {
             return {};
         }
@@ -47,49 +44,34 @@
         }
     }
 
-    /*
-     * Conserva TODO lo que ya guardaste desde el editor (texto, bloques,
-     * portada, etc.) y solo fija los temas que hemos definido desde código.
-     */
-    const overrides = readOverrides();
+    function keepFixedThemes() {
+        const overrides = readOverrides();
 
-    overrides["you-are-my-reality"] = Object.assign(
-        {},
-        overrides["you-are-my-reality"] || {},
-        {
+        overrides["you-are-my-reality"] = Object.assign({}, overrides["you-are-my-reality"] || {}, {
             theme: RED_THEME,
             contentVersion: 2
-        }
-    );
+        });
 
-    overrides["my-world-with-you"] = Object.assign(
-        {},
-        overrides["my-world-with-you"] || {},
-        {
+        overrides["my-world-with-you"] = Object.assign({}, overrides["my-world-with-you"] || {}, {
             theme: RED_THEME,
             contentVersion: 2
-        }
-    );
+        });
 
-    overrides["happy-birthday-my-love"] = Object.assign(
-        {},
-        overrides["happy-birthday-my-love"] || {},
-        {
+        overrides["happy-birthday-my-love"] = Object.assign({}, overrides["happy-birthday-my-love"] || {}, {
             theme: HAPPY_BIRTHDAY_THEME,
             contentVersion: 2
-        }
-    );
+        });
 
-    overrides["you-save-me"] = Object.assign(
-        {},
-        overrides["you-save-me"] || {},
-        {
+        /* Conserva texto, portada y bloques; únicamente fija el tema. */
+        overrides["you-save-me"] = Object.assign({}, overrides["you-save-me"] || {}, {
             theme: YOU_SAVE_ME_THEME,
-            contentVersion: 2
-        }
-    );
+            contentVersion: 1
+        });
 
-    saveOverrides(overrides);
+        saveOverrides(overrides);
+    }
+
+    keepFixedThemes();
 
     async function b64Image(path, fallback) {
         if (!path) return fallback;
@@ -104,10 +86,7 @@
     }
 
     function findBlog(id) {
-        if (typeof blogsData === "undefined" || !Array.isArray(blogsData)) {
-            return null;
-        }
-
+        if (typeof blogsData === "undefined" || !Array.isArray(blogsData)) return null;
         return blogsData.find(function (item) {
             return item && item.id === id;
         }) || null;
@@ -121,7 +100,6 @@
         });
 
         if (existing) {
-            /* Solo conserva la ruta original del banner. No procesa la imagen. */
             existing.src = banner.src;
             existing.alt = banner.alt;
             existing.layout = banner.layout || "banner";
@@ -137,28 +115,64 @@
         };
 
         const index = blog.blocks.findIndex(function (block) {
-            return block &&
-                typeof block.text === "string" &&
-                block.text.indexOf(banner.after) >= 0;
+            return block && typeof block.text === "string" && block.text.indexOf(banner.after) >= 0;
         });
 
-        if (index >= 0) {
-            blog.blocks.splice(index + 1, 0, imageBlock);
-        } else {
-            blog.blocks.push(imageBlock);
-        }
+        if (index >= 0) blog.blocks.splice(index + 1, 0, imageBlock);
+        else blog.blocks.push(imageBlock);
     }
 
-    function applySaveMeTheme(blog) {
-        if (blog) {
-            blog.theme = Object.assign({}, YOU_SAVE_ME_THEME);
-        }
+    function applySaveMeThemeToData(blog) {
+        if (blog) blog.theme = Object.assign({}, YOU_SAVE_ME_THEME);
+    }
 
-        document.querySelectorAll('[data-blog-id="you-save-me"]').forEach(function (element) {
-            element.style.setProperty("--blog-bg", YOU_SAVE_ME_THEME.background);
-            element.style.setProperty("--blog-surface", YOU_SAVE_ME_THEME.surface);
-            element.style.setProperty("--blog-text", YOU_SAVE_ME_THEME.text);
-            element.style.setProperty("--blog-accent", YOU_SAVE_ME_THEME.accent);
+    /*
+     * Fuerza #AEAEB3 sobre el DOM final. Esto evita que el variant "diary"
+     * vuelva a aplicar sus tarjetas oscuras después de cargar el tema.
+     * No se modifica ningún <img>.
+     */
+    function forceYouSaveMeFlatColor() {
+        const roots = document.querySelectorAll('[data-blog-id="you-save-me"]');
+
+        roots.forEach(function (root) {
+            root.style.setProperty("--blog-bg", "#aeaeb3", "important");
+            root.style.setProperty("--blog-surface", "#aeaeb3", "important");
+            root.style.setProperty("--blog-text", "#ffffff", "important");
+            root.style.setProperty("--blog-accent", "#aeaeb3", "important");
+            root.style.setProperty("background", "#aeaeb3", "important");
+            root.style.setProperty("background-color", "#aeaeb3", "important");
+
+            const sameGraySelectors = [
+                ".amino-reader-header",
+                ".amino-reader-author",
+                ".amino-reader-body",
+                ".amino-reader-content",
+                ".blog-modal-body",
+                ".blog-modal-header",
+                ".blog-modal-meta",
+                ".amino-content-paragraph",
+                ".amino-content-heading",
+                ".amino-content-quote",
+                ".amino-content-divider",
+                ".amino-content-banner",
+                ".amino-content-image-free",
+                ".blog-modal-comments"
+            ].join(",");
+
+            root.querySelectorAll(sameGraySelectors).forEach(function (element) {
+                element.style.setProperty("background", "#aeaeb3", "important");
+                element.style.setProperty("background-color", "#aeaeb3", "important");
+                element.style.setProperty("box-shadow", "none", "important");
+            });
+
+            root.querySelectorAll(
+                ".amino-content-paragraph,.amino-content-heading,.amino-content-quote"
+            ).forEach(function (element) {
+                element.style.setProperty("color", "#ffffff", "important");
+                element.style.setProperty("border-color", "#aeaeb3", "important");
+            });
+
+            /* Importante: no se aplica filter, opacity, canvas ni recolor a imágenes. */
         });
     }
 
@@ -168,33 +182,28 @@
         const style = document.createElement("style");
         style.id = "youSaveMeBackgroundFix";
         style.textContent = `
-            [data-blog-id="you-save-me"] {
-                --blog-bg: #aeaeb3 !important;
-                --blog-surface: #aeaeb3 !important;
-                --blog-text: #ffffff !important;
-                --blog-accent: #aeaeb3 !important;
-                background: #aeaeb3 !important;
-            }
-
+            [data-blog-id="you-save-me"],
+            [data-blog-id="you-save-me"] .amino-reader-header,
+            [data-blog-id="you-save-me"] .amino-reader-author,
             [data-blog-id="you-save-me"] .amino-reader-body,
             [data-blog-id="you-save-me"] .amino-reader-content,
-            [data-blog-id="you-save-me"] .amino-content,
-            [data-blog-id="you-save-me"] .blog-content,
             [data-blog-id="you-save-me"] .blog-modal-body,
             [data-blog-id="you-save-me"] .blog-modal-header,
             [data-blog-id="you-save-me"] .blog-modal-meta,
             [data-blog-id="you-save-me"] .amino-content-paragraph,
-            [data-blog-id="you-save-me"] .amino-content-quote,
             [data-blog-id="you-save-me"] .amino-content-heading,
+            [data-blog-id="you-save-me"] .amino-content-quote,
             [data-blog-id="you-save-me"] .amino-content-divider,
             [data-blog-id="you-save-me"] .amino-content-banner,
-            [data-blog-id="you-save-me"] .amino-content-banner.amino-content-image-free {
+            [data-blog-id="you-save-me"] .amino-content-banner.amino-content-image-free,
+            [data-blog-id="you-save-me"] .blog-modal-comments {
                 background: #aeaeb3 !important;
+                background-color: #aeaeb3 !important;
             }
 
             [data-blog-id="you-save-me"] .amino-content-paragraph,
-            [data-blog-id="you-save-me"] .amino-content-quote,
-            [data-blog-id="you-save-me"] .amino-content-heading {
+            [data-blog-id="you-save-me"] .amino-content-heading,
+            [data-blog-id="you-save-me"] .amino-content-quote {
                 color: #ffffff !important;
                 box-shadow: none !important;
             }
@@ -204,17 +213,35 @@
                 box-shadow: none !important;
             }
 
-            /* Los banners se muestran exactamente como fueron subidos. */
-            [data-blog-id="you-save-me"] .amino-content-banner img {
+            /* Los banners/imágenes quedan originales. */
+            [data-blog-id="you-save-me"] img {
                 filter: none !important;
                 opacity: 1 !important;
             }
         `;
-
         document.head.appendChild(style);
     }
 
     installYouSaveMeBackgroundFix();
+
+    let forceQueued = false;
+    function queueForceYouSaveMe() {
+        if (forceQueued) return;
+        forceQueued = true;
+        requestAnimationFrame(function () {
+            forceQueued = false;
+            forceYouSaveMeFlatColor();
+        });
+    }
+
+    /* El lector se construye dinámicamente; por eso se vuelve a aplicar al aparecer. */
+    const observer = new MutationObserver(queueForceYouSaveMe);
+    observer.observe(document.documentElement, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["data-blog-id", "data-blog-variant", "style", "class"]
+    });
 
     async function installBlogExtras() {
         const realityBlog = findBlog("you-are-my-reality");
@@ -270,7 +297,6 @@
         }
 
         const saveMeBlog = findBlog("you-save-me");
-
         if (saveMeBlog && Array.isArray(saveMeBlog.blocks)) {
             const saveMeBanners = [
                 {
@@ -305,20 +331,40 @@
                 }
             ];
 
-            /* Importante: NO se recolorea, redibuja ni modifica ningún banner. */
             saveMeBanners.forEach(function (banner) {
                 banner.layout = "free";
                 insertImageAfterText(saveMeBlog, banner);
             });
 
-            applySaveMeTheme(saveMeBlog);
+            applySaveMeThemeToData(saveMeBlog);
+            keepFixedThemes();
+            queueForceYouSaveMe();
         }
     }
 
+    /* Si Guardar vuelve a escribir el tema, lo dejamos fijo en #AEAEB3 sin borrar el contenido. */
+    document.addEventListener("click", function (event) {
+        const target = event.target && event.target.closest ? event.target.closest("#publishPost") : null;
+        if (!target) return;
+
+        setTimeout(function () {
+            keepFixedThemes();
+            queueForceYouSaveMe();
+        }, 0);
+        setTimeout(function () {
+            keepFixedThemes();
+            queueForceYouSaveMe();
+        }, 150);
+    }, true);
+
     if (document.readyState === "complete") {
         installBlogExtras();
+        queueForceYouSaveMe();
     } else {
-        window.addEventListener("load", installBlogExtras, { once: true });
+        window.addEventListener("load", function () {
+            installBlogExtras();
+            queueForceYouSaveMe();
+        }, { once: true });
     }
 
     if (String(location.hash || "").indexOf("#amino-share=") === 0) {
