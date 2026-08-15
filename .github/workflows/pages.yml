@@ -44,6 +44,22 @@ jobs:
             cat "${site_path}/image-position-fix.css" >> "${site_path}/blog-editor.css"
           fi
 
+      - name: Activar guardado en la nube
+        run: |
+          if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/cloud-sync.js" ]; then
+            python3 - <<'PY'
+          from pathlib import Path
+          import os
+          site = Path(os.environ.get("site_path", "."))
+          index = site / "index.html"
+          text = index.read_text(encoding="utf-8")
+          marker = '<script src="script.js"></script>'
+          cloud = '<script src="cloud-sync.js"></script>\n'
+          if 'src="cloud-sync.js"' not in text and marker in text:
+              text = text.replace(marker, cloud + marker, 1)
+              index.write_text(text, encoding="utf-8")
+          PY
+
       - name: Subir sitio
         uses: actions/upload-pages-artifact@v3
         with:
