@@ -640,63 +640,67 @@
      MODAL CREAR POST
 ========================== -->
 
-<div class="modal editor-modal" id="postModal" aria-hidden="true">
+<div
+    class="modal"
+    id="postModal"
+    aria-hidden="true"
+>
+
     <section class="blog-editor-shell" role="dialog" aria-modal="true" aria-labelledby="editorDialogTitle">
         <header class="blog-editor-header">
-            <button class="editor-icon-button" id="closePostModal" type="button" aria-label="Guardar borrador y volver">←</button>
+            <button class="editor-icon-button" id="closePostModal" type="button" aria-label="Cerrar editor">←</button>
             <div class="editor-heading">
-                <strong id="editorDialogTitle">Editor de blog</strong>
-                <small id="draftStatus" role="status" aria-live="polite">Listo para escribir</small>
+                <strong id="editorDialogTitle">Nuevo blog</strong>
+                <small id="draftStatus">Listo para escribir</small>
             </div>
             <button class="editor-preview-button" id="previewPost" type="button" aria-pressed="false">Vista previa</button>
-            <button class="editor-publish-button" id="publishPost" type="button">Guardar</button>
+            <button class="editor-publish-button" id="publishPost" type="button">Publicar</button>
         </header>
 
         <div class="blog-editor-scroll">
             <main class="editor-compose-view" id="editorComposeView">
-                <section class="editor-section editor-title-section" aria-labelledby="editorTitleLabel">
-                    <label id="editorTitleLabel" for="newPostTitle">Título del blog</label>
-                    <input type="text" id="newPostTitle" maxlength="120" placeholder="Ponle un título a tu blog" autocomplete="off">
+                <section class="editor-section editor-title-section">
+                    <label for="newPostTitle">Título</label>
+                    <input id="newPostTitle" type="text" autocomplete="off" placeholder="Título del blog">
+                </section>
+
+                <section class="editor-section" aria-labelledby="blogThemeTitle">
+                    <div class="editor-section-heading">
+                        <div>
+                            <h3 id="blogThemeTitle">Tema del blog</h3>
+                            <p>Personaliza el fondo, la tarjeta, el texto y el acento.</p>
+                        </div>
+                    </div>
+                    <div class="blog-theme-grid">
+                        <label>Fondo <input type="color" id="blogBackgroundColor" value="#212121"></label>
+                        <label>Tarjeta <input type="color" id="blogSurfaceColor" value="#292929"></label>
+                        <label>Texto <input type="color" id="blogTextColor" value="#eeeeee"></label>
+                        <label>Acento <input type="color" id="blogAccentColor" value="#c7ccd6"></label>
+                    </div>
+                    <div class="blog-theme-presets" aria-label="Temas rápidos">
+                        <button type="button" data-blog-theme-preset="black">Negro</button>
+                        <button type="button" data-blog-theme-preset="contrast">Contraste</button>
+                        <button type="button" data-blog-theme-preset="amino">Amino</button>
+                    </div>
                 </section>
 
                 <section class="editor-section" aria-labelledby="coverPickerTitle">
                     <div class="editor-section-heading">
                         <div>
                             <h3 id="coverPickerTitle">Portada</h3>
-                            <p>Elige una de las portadas que ya preparaste.</p>
+                            <p>Selecciona una portada para la tarjeta del blog.</p>
                         </div>
                     </div>
-                    <div class="cover-picker" id="coverPicker" role="list">
-                        <button class="cover-option" type="button" data-cover="img/portada youarerality.png" aria-label="Usar portada You are my reality"><img src="img/portada youarerality.png" alt="" loading="lazy" decoding="async"></button>
-                        <button class="cover-option" type="button" data-cover="img/portadaserenpidia.png" aria-label="Usar portada My Serendipity"><img src="img/portadaserenpidia.png" alt="" loading="lazy" decoding="async"></button>
-                        <button class="cover-option" type="button" data-cover="img/portada you save me.png" aria-label="Usar portada You save me"><img src="img/portada you save me.png" alt="" loading="lazy" decoding="async"></button>
-                        <button class="cover-option" type="button" data-cover="img/portada my world with you.png" aria-label="Usar portada My world with you"><img src="img/portada my world with you.png" alt="" loading="lazy" decoding="async"></button>
-                        <button class="cover-option" type="button" data-cover="img/portada mrjelous.png" aria-label="Usar portada Mr Jealous"><img src="img/portada mrjelous.png" alt="" loading="lazy" decoding="async"></button>
-                        <button class="cover-option" type="button" data-cover="img/12.png" aria-label="Usar portada Happy Birthday"><img src="img/12.png" alt="" loading="lazy" decoding="async"></button>
+                    <div class="cover-picker" id="coverPicker">
+                        <button class="cover-option" type="button" data-cover="img/portada youarerality.png"><img src="img/portada youarerality.png" alt=""><span>Reality</span></button>
+                        <button class="cover-option" type="button" data-cover="img/portadaserenpidia.png"><img src="img/portadaserenpidia.png" alt=""><span>Serendipity</span></button>
+                        <button class="cover-option" type="button" data-cover="img/portada you save me.png"><img src="img/portada you save me.png" alt=""><span>Save me</span></button>
+                        <button class="cover-option" type="button" data-cover="img/portada my world with you.png"><img src="img/portada my world with you.png" alt=""><span>My world</span></button>
+                        <button class="cover-option" type="button" data-cover="img/portada mrjelous.png"><img src="img/portada mrjelous.png" alt=""><span>Mr Jealous</span></button>
                     </div>
                 </section>
 
-                <section class="editor-section blog-theme-editor" aria-labelledby="blogThemeTitle">
-                    <div class="editor-section-heading">
-                        <div>
-                            <h3 id="blogThemeTitle">Tema del blog</h3>
-                            <p>Usa un estilo listo o cambia cada color.</p>
-                        </div>
-                    </div>
-                    <div class="blog-theme-presets" aria-label="Temas rápidos">
-                        <button type="button" data-blog-theme-preset="black"><span class="theme-preview theme-preview-black"></span>Negro total</button>
-                        <button type="button" data-blog-theme-preset="contrast"><span class="theme-preview theme-preview-contrast"></span>Negro y paneles</button>
-                        <button type="button" data-blog-theme-preset="amino"><span class="theme-preview theme-preview-amino"></span>Amino oscuro</button>
-                    </div>
-                    <div class="blog-color-grid">
-                        <label>Fondo <input type="color" id="blogBackgroundColor" value="#000000"></label>
-                        <label>Bloques <input type="color" id="blogSurfaceColor" value="#000000"></label>
-                        <label>Texto <input type="color" id="blogTextColor" value="#ffffff"></label>
-                        <label>Detalles <input type="color" id="blogAccentColor" value="#d7dce6"></label>
-                    </div>
-                </section>
-
-                <section class="editor-section editor-content-section" aria-labelledby="contentBlocksTitle">
+                <section class="editor-section" aria-labelledby="contentBlocksTitle">
                     <div class="editor-section-heading">
                         <div>
                             <h3 id="contentBlocksTitle">Contenido</h3>
@@ -1023,6 +1027,7 @@
 
 
 <script src="script.js"></script>
+<script src="shared-state.js"></script>
 <script src="blog-editor.js"></script>
 
 </body>
