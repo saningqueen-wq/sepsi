@@ -1,0 +1,124 @@
+/* Decoracion exclusiva para Happy Birthday My Love.
+   No altera banners, imagenes, contenido ni el tema guardado. */
+
+[data-blog-variant="birthday-card"] .amino-content-heading {
+    position: relative;
+    width: min(88%, 430px);
+    margin: 48px auto 28px;
+    padding: 22px 14px 18px;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: var(--blog-text);
+    text-align: center !important;
+    letter-spacing: 0.055em;
+}
+
+[data-blog-variant="birthday-card"] .amino-content-heading::before {
+    content: "✧  ─────────  ♡  ─────────  ✧";
+    display: block;
+    width: 100%;
+    margin: 0 auto 13px;
+    overflow: hidden;
+    color: var(--blog-accent);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    opacity: 0.95;
+}
+
+[data-blog-variant="birthday-card"] .amino-content-heading::after {
+    content: "──  ✦  ──";
+    display: block;
+    margin-top: 12px;
+    color: var(--blog-accent);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    opacity: 0.9;
+}
+
+/* Separadores finos estilo blog de Amino. */
+[data-blog-variant="birthday-card"] .amino-content-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: min(82%, 400px);
+    margin: 46px auto;
+    color: var(--blog-accent);
+}
+
+[data-blog-variant="birthday-card"] .amino-content-divider::before,
+[data-blog-variant="birthday-card"] .amino-content-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--blog-accent) 78%, transparent));
+}
+
+[data-blog-variant="birthday-card"] .amino-content-divider::after {
+    background: linear-gradient(90deg, color-mix(in srgb, var(--blog-accent) 78%, transparent), transparent);
+}
+
+[data-blog-variant="birthday-card"] .amino-content-divider span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    font-size: 0 !important;
+}
+
+[data-blog-variant="birthday-card"] .amino-content-divider span::before {
+    content: "✧ ♡ ✧" !important;
+    color: var(--blog-accent);
+    font-size: 12px !important;
+    letter-spacing: 0.15em;
+}
+
+/* Las citas conservan su texto; solo reciben una pequena firma decorativa. */
+[data-blog-variant="birthday-card"] .amino-content-quote {
+    position: relative;
+}
+
+[data-blog-variant="birthday-card"] .amino-content-quote::before {
+    content: "♡  ·  ✧  ·  ♡";
+    display: block;
+    margin-bottom: 12px;
+    color: var(--blog-accent);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-align: center;
+    opacity: 0.9;
+}
+
+[data-blog-variant="birthday-card"] .amino-content-quote::after {
+    content: "────────  ✦  ────────";
+    display: block;
+    margin-top: 13px;
+    color: var(--blog-accent);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-align: center;
+    opacity: 0.75;
+}
+
+/* Ajuste movil sin afectar imagenes ni banners. */
+@media (max-width: 520px) {
+    [data-blog-variant="birthday-card"] .amino-content-heading {
+        width: 92%;
+        margin-block: 42px 24px;
+        padding-inline: 8px;
+    }
+
+    [data-blog-variant="birthday-card"] .amino-content-heading::before {
+        font-size: 9px;
+    }
+
+    [data-blog-variant="birthday-card"] .amino-content-divider {
+        width: 86%;
+        margin-block: 40px;
+    }
+}
