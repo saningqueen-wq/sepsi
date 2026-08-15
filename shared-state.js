@@ -139,53 +139,52 @@
         document.head.appendChild(style);
     }
 
-    installYouSaveMeBackgroundFix();
+   function installYouSaveMeBackgroundFix() {
+    if (document.getElementById("youSaveMeBackgroundFix")) return;
 
-    window.addEventListener("load", async function () {
-        const realityBlog = findBlog("you-are-my-reality");
+    const style = document.createElement("style");
+    style.id = "youSaveMeBackgroundFix";
 
-        if (realityBlog && Array.isArray(realityBlog.blocks)) {
-            const realityBanners = [
-                {
-                    id: "reality-extra-miffy",
-                    src: "img/reality-banner-miffy.svg",
-                    b64: "img/reality-banner-miffy.b64",
-                    alt: "Conejito asomándose sobre fondo rojo",
-                    after: "felicidad silenciosa"
-                },
-                {
-                    id: "reality-extra-couple",
-                    src: "img/reality-banner-couple.svg",
-                    alt: "Pareja mirándose en un banner rojo y blanco",
-                    after: "lo cotidiano en algo que deseo cuidar"
-                },
-                {
-                    id: "reality-extra-snoopy",
-                    src: "img/reality-banner-snoopy.svg",
-                    b64: "img/reality-banner-snoopy.b64",
-                    alt: "Snoopy sobre fondo rojo",
-                    after: "seguir creciendo con paciencia"
-                },
-                {
-                    id: "reality-extra-snoopy-reading",
-                    src: "img/reality-banner-snoopy-reading.svg",
-                    b64: "img/reality-banner-snoopy-reading.b64",
-                    alt: "Snoopy leyendo el periódico sobre fondo rojo",
-                    after: "volvemos por voluntad"
-                },
-                {
-                    id: "reality-extra-winter",
-                    src: "img/reality-banner-winter.svg",
-                    alt: "Pareja con bufandas en tonos rojos",
-                    after: "seguir eligiéndonos desde la libertad"
-                },
-                {
-                    id: "reality-extra-love",
-                    src: "img/reality-banner-love.svg",
-                    alt: "Banner rojo con estrellas y el texto japonés 愛してる",
-                    after: "Tú eres mi realidad"
-                }
-            ];
+    style.textContent = `
+        [data-blog-id="you-save-me"] {
+            --blog-bg: #aeaeb3 !important;
+            --blog-surface: #aeaeb3 !important;
+            --blog-text: #ffffff !important;
+            --blog-accent: #aeaeb3 !important;
+
+            background: #aeaeb3 !important;
+        }
+
+        [data-blog-id="you-save-me"] .amino-reader-body,
+        [data-blog-id="you-save-me"] .amino-reader-content,
+        [data-blog-id="you-save-me"] .amino-content,
+        [data-blog-id="you-save-me"] .blog-content {
+            background: #aeaeb3 !important;
+        }
+
+        [data-blog-id="you-save-me"] .amino-content-paragraph,
+        [data-blog-id="you-save-me"] .amino-content-quote,
+        [data-blog-id="you-save-me"] .amino-content-heading {
+            background: #aeaeb3 !important;
+            color: #ffffff !important;
+        }
+
+        [data-blog-id="you-save-me"] .amino-content-banner,
+        [data-blog-id="you-save-me"] .amino-content-banner.amino-content-image-free {
+            background: #aeaeb3 !important;
+            box-shadow: none !important;
+        }
+
+        /* NO modifica las imágenes */
+        [data-blog-id="you-save-me"] .amino-content-banner img {
+            filter: none !important;
+            opacity: 1 !important;
+        }
+    `;
+
+    document.head.appendChild(style);
+}
+
 
             for (const banner of realityBanners) {
                 banner.src = await b64Image(banner.b64, banner.src);
