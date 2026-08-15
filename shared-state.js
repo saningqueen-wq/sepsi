@@ -1,7 +1,6 @@
 (function () {
     "use strict";
 
-    // Colores exactos de la captura del editor de "You Are My Reality".
     const RED_THEME = {
         background: "#ff0006",
         surface: "#fe0104",
@@ -9,7 +8,6 @@
         accent: "#d94962"
     };
 
-    // Happy Birthday conserva su tema rosa/morado original.
     const HAPPY_BIRTHDAY_THEME = {
         background: "#170713",
         surface: "#291022",
@@ -24,9 +22,7 @@
             const raw = localStorage.getItem(OVERRIDES_KEY);
             if (!raw) return {};
             const parsed = JSON.parse(raw);
-            return parsed && typeof parsed === "object" && !Array.isArray(parsed)
-                ? parsed
-                : {};
+            return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
         } catch (error) {
             return {};
         }
@@ -35,64 +31,53 @@
     function saveOverrides(value) {
         try {
             localStorage.setItem(OVERRIDES_KEY, JSON.stringify(value));
-        } catch (error) {
-            // La página puede seguir funcionando aunque localStorage esté bloqueado.
-        }
+        } catch (error) {}
     }
 
     const overrides = readOverrides();
 
-    // You Are My Reality: rojo de la captura.
-    overrides["you-are-my-reality"] = Object.assign(
-        {},
-        overrides["you-are-my-reality"] || {},
-        {
-            theme: RED_THEME,
-            contentVersion: 2
-        }
-    );
+    overrides["you-are-my-reality"] = Object.assign({}, overrides["you-are-my-reality"] || {}, {
+        theme: RED_THEME,
+        contentVersion: 2
+    });
 
-    // My World With You: mismo rojo de la captura, sin tocar contenido ni formato.
-    overrides["my-world-with-you"] = Object.assign(
-        {},
-        overrides["my-world-with-you"] || {},
-        {
-            theme: RED_THEME,
-            contentVersion: 2
-        }
-    );
+    overrides["my-world-with-you"] = Object.assign({}, overrides["my-world-with-you"] || {}, {
+        theme: RED_THEME,
+        contentVersion: 2
+    });
 
-    // Happy Birthday se mantiene con su tema original.
-    overrides["happy-birthday-my-love"] = Object.assign(
-        {},
-        overrides["happy-birthday-my-love"] || {},
-        {
-            theme: HAPPY_BIRTHDAY_THEME,
-            contentVersion: 2
-        }
-    );
+    overrides["happy-birthday-my-love"] = Object.assign({}, overrides["happy-birthday-my-love"] || {}, {
+        theme: HAPPY_BIRTHDAY_THEME,
+        contentVersion: 2
+    });
 
     saveOverrides(overrides);
 
-    // Añade los seis banners rojos de You Are My Reality una sola vez,
-    // después de que blog-editor.js haya preparado los blogs.
-    window.addEventListener("load", function () {
-        if (typeof blogsData === "undefined" || !Array.isArray(blogsData)) {
-            return;
+    async function b64Image(path, fallback) {
+        if (!path) return fallback;
+        try {
+            const response = await fetch(path, { cache: "no-store" });
+            if (!response.ok) throw new Error("image data not found");
+            const text = (await response.text()).trim();
+            return text ? "data:image/webp;base64," + text : fallback;
+        } catch (error) {
+            return fallback;
         }
+    }
+
+    window.addEventListener("load", async function () {
+        if (typeof blogsData === "undefined" || !Array.isArray(blogsData)) return;
 
         const blog = blogsData.find(function (item) {
             return item && item.id === "you-are-my-reality";
         });
-
-        if (!blog || !Array.isArray(blog.blocks)) {
-            return;
-        }
+        if (!blog || !Array.isArray(blog.blocks)) return;
 
         const banners = [
             {
                 id: "reality-extra-miffy",
                 src: "img/reality-banner-miffy.svg",
+                b64: "img/reality-banner-miffy.b64",
                 alt: "Conejito asomándose sobre fondo rojo",
                 after: "felicidad silenciosa"
             },
@@ -105,12 +90,14 @@
             {
                 id: "reality-extra-snoopy",
                 src: "img/reality-banner-snoopy.svg",
+                b64: "img/reality-banner-snoopy.b64",
                 alt: "Snoopy sobre fondo rojo",
                 after: "seguir creciendo con paciencia"
             },
             {
                 id: "reality-extra-snoopy-reading",
                 src: "img/reality-banner-snoopy-reading.svg",
+                b64: "img/reality-banner-snoopy-reading.b64",
                 alt: "Snoopy leyendo el periódico sobre fondo rojo",
                 after: "volvemos por voluntad"
             },
@@ -128,43 +115,41 @@
             }
         ];
 
-        banners.forEach(function (banner) {
-            const exists = blog.blocks.some(function (block) {
+        for (const banner of banners) {
+            const resolvedSrc = await b64Image(banner.b64, banner.src);
+            const existing = blog.blocks.find(function (block) {
                 return block && block.id === banner.id;
             });
 
-            if (exists) {
-                return;
+            if (existing) {
+                existing.src = resolvedSrc;
+                existing.alt = banner.alt;
+                continue;
             }
 
             const imageBlock = {
                 id: banner.id,
                 type: "image",
-                src: banner.src,
+                src: resolvedSrc,
                 alt: banner.alt,
                 layout: "free"
             };
 
             const index = blog.blocks.findIndex(function (block) {
-                return block &&
-                    typeof block.text === "string" &&
-                    block.text.indexOf(banner.after) >= 0;
+                return block && typeof block.text === "string" && block.text.indexOf(banner.after) >= 0;
             });
 
-            if (index >= 0) {
-                blog.blocks.splice(index + 1, 0, imageBlock);
-            } else {
-                blog.blocks.push(imageBlock);
-            }
+            if (index >= 0) blog.blocks.splice(index + 1, 0, imageBlock);
+            else blog.blocks.push(imageBlock);
+        }
+
+        document.querySelectorAll('img[src="img/reality-banner-miffy.svg"]').forEach(function (img) {
+            const block = blog.blocks.find(function (item) { return item && item.id === "reality-extra-miffy"; });
+            if (block) img.src = block.src;
         });
     });
 
-    // No guardamos configuraciones dentro de la URL.
     if (String(location.hash || "").indexOf("#amino-share=") === 0) {
-        history.replaceState(
-            history.state,
-            "",
-            location.pathname + location.search
-        );
+        history.replaceState(history.state, "", location.pathname + location.search);
     }
 })();
