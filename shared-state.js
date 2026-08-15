@@ -19,9 +19,9 @@
         },
         "happy-birthday-my-love": {
             background: "#d5cfed",
-            surface: "#291022",
+            surface: "#d5cfed",
             text: "#fff1fb",
-            accent: "#e756bd"
+            accent: #d5cfed"
         },
         "you-save-me": {
             background: "#aeaeb3",
