@@ -236,6 +236,20 @@
         });
     }
 
+    function installYouSaveMeBackgroundFix() {
+        if (document.getElementById("youSaveMeBackgroundFix")) return;
+        const style = document.createElement("style");
+        style.id = "youSaveMeBackgroundFix";
+        style.textContent = [
+            '[data-blog-id="you-save-me"][data-blog-variant="diary"] .amino-content-banner.amino-content-image-free{background:var(--blog-bg)!important;}',
+            '[data-blog-id="you-save-me"][data-blog-variant="diary"] .amino-content-banner{background:var(--blog-bg)!important;}',
+            '[data-blog-id="you-save-me"][data-blog-variant="diary"] .amino-content-banner.amino-content-image-free{box-shadow:none!important;}'
+        ].join("");
+        document.head.appendChild(style);
+    }
+
+    installYouSaveMeBackgroundFix();
+
     window.addEventListener("load", async function () {
         const realityBlog = findBlog("you-are-my-reality");
 
