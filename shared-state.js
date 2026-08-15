@@ -15,6 +15,7 @@
         accent: "#e756bd"
     };
 
+    /* You Save Me: todo el fondo usa exactamente este gris. */
     const YOU_SAVE_ME_THEME = {
         background: "#aeaeb3",
         surface: "#aeaeb3",
@@ -29,7 +30,9 @@
             const raw = localStorage.getItem(OVERRIDES_KEY);
             if (!raw) return {};
             const parsed = JSON.parse(raw);
-            return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+            return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+                ? parsed
+                : {};
         } catch (error) {
             return {};
         }
@@ -38,30 +41,53 @@
     function saveOverrides(value) {
         try {
             localStorage.setItem(OVERRIDES_KEY, JSON.stringify(value));
-        } catch (error) {}
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 
+    /*
+     * Conserva TODO lo que ya guardaste desde el editor (texto, bloques,
+     * portada, etc.) y solo fija los temas que hemos definido desde código.
+     */
     const overrides = readOverrides();
 
-    overrides["you-are-my-reality"] = Object.assign({}, overrides["you-are-my-reality"] || {}, {
-        theme: RED_THEME,
-        contentVersion: 2
-    });
+    overrides["you-are-my-reality"] = Object.assign(
+        {},
+        overrides["you-are-my-reality"] || {},
+        {
+            theme: RED_THEME,
+            contentVersion: 2
+        }
+    );
 
-    overrides["my-world-with-you"] = Object.assign({}, overrides["my-world-with-you"] || {}, {
-        theme: RED_THEME,
-        contentVersion: 2
-    });
+    overrides["my-world-with-you"] = Object.assign(
+        {},
+        overrides["my-world-with-you"] || {},
+        {
+            theme: RED_THEME,
+            contentVersion: 2
+        }
+    );
 
-    overrides["happy-birthday-my-love"] = Object.assign({}, overrides["happy-birthday-my-love"] || {}, {
-        theme: HAPPY_BIRTHDAY_THEME,
-        contentVersion: 2
-    });
+    overrides["happy-birthday-my-love"] = Object.assign(
+        {},
+        overrides["happy-birthday-my-love"] || {},
+        {
+            theme: HAPPY_BIRTHDAY_THEME,
+            contentVersion: 2
+        }
+    );
 
-    overrides["you-save-me"] = Object.assign({}, overrides["you-save-me"] || {}, {
-        theme: YOU_SAVE_ME_THEME,
-        contentVersion: 2
-    });
+    overrides["you-save-me"] = Object.assign(
+        {},
+        overrides["you-save-me"] || {},
+        {
+            theme: YOU_SAVE_ME_THEME,
+            contentVersion: 2
+        }
+    );
 
     saveOverrides(overrides);
 
@@ -78,7 +104,10 @@
     }
 
     function findBlog(id) {
-        if (typeof blogsData === "undefined" || !Array.isArray(blogsData)) return null;
+        if (typeof blogsData === "undefined" || !Array.isArray(blogsData)) {
+            return null;
+        }
+
         return blogsData.find(function (item) {
             return item && item.id === id;
         }) || null;
@@ -92,6 +121,7 @@
         });
 
         if (existing) {
+            /* Solo conserva la ruta original del banner. No procesa la imagen. */
             existing.src = banner.src;
             existing.alt = banner.alt;
             existing.layout = banner.layout || "banner";
@@ -107,11 +137,16 @@
         };
 
         const index = blog.blocks.findIndex(function (block) {
-            return block && typeof block.text === "string" && block.text.indexOf(banner.after) >= 0;
+            return block &&
+                typeof block.text === "string" &&
+                block.text.indexOf(banner.after) >= 0;
         });
 
-        if (index >= 0) blog.blocks.splice(index + 1, 0, imageBlock);
-        else blog.blocks.push(imageBlock);
+        if (index >= 0) {
+            blog.blocks.splice(index + 1, 0, imageBlock);
+        } else {
+            blog.blocks.push(imageBlock);
+        }
     }
 
     function applySaveMeTheme(blog) {
@@ -129,62 +164,103 @@
 
     function installYouSaveMeBackgroundFix() {
         if (document.getElementById("youSaveMeBackgroundFix")) return;
+
         const style = document.createElement("style");
         style.id = "youSaveMeBackgroundFix";
-        style.textContent = [
-            '[data-blog-id="you-save-me"][data-blog-variant="diary"] .amino-content-banner.amino-content-image-free{background:var(--blog-bg)!important;}',
-            '[data-blog-id="you-save-me"][data-blog-variant="diary"] .amino-content-banner{background:var(--blog-bg)!important;}',
-            '[data-blog-id="you-save-me"][data-blog-variant="diary"] .amino-content-banner.amino-content-image-free{box-shadow:none!important;}'
-        ].join("");
+        style.textContent = `
+            [data-blog-id="you-save-me"] {
+                --blog-bg: #aeaeb3 !important;
+                --blog-surface: #aeaeb3 !important;
+                --blog-text: #ffffff !important;
+                --blog-accent: #aeaeb3 !important;
+                background: #aeaeb3 !important;
+            }
+
+            [data-blog-id="you-save-me"] .amino-reader-body,
+            [data-blog-id="you-save-me"] .amino-reader-content,
+            [data-blog-id="you-save-me"] .amino-content,
+            [data-blog-id="you-save-me"] .blog-content,
+            [data-blog-id="you-save-me"] .blog-modal-body,
+            [data-blog-id="you-save-me"] .blog-modal-header,
+            [data-blog-id="you-save-me"] .blog-modal-meta,
+            [data-blog-id="you-save-me"] .amino-content-paragraph,
+            [data-blog-id="you-save-me"] .amino-content-quote,
+            [data-blog-id="you-save-me"] .amino-content-heading,
+            [data-blog-id="you-save-me"] .amino-content-divider,
+            [data-blog-id="you-save-me"] .amino-content-banner,
+            [data-blog-id="you-save-me"] .amino-content-banner.amino-content-image-free {
+                background: #aeaeb3 !important;
+            }
+
+            [data-blog-id="you-save-me"] .amino-content-paragraph,
+            [data-blog-id="you-save-me"] .amino-content-quote,
+            [data-blog-id="you-save-me"] .amino-content-heading {
+                color: #ffffff !important;
+                box-shadow: none !important;
+            }
+
+            [data-blog-id="you-save-me"] .amino-content-banner,
+            [data-blog-id="you-save-me"] .amino-content-banner.amino-content-image-free {
+                box-shadow: none !important;
+            }
+
+            /* Los banners se muestran exactamente como fueron subidos. */
+            [data-blog-id="you-save-me"] .amino-content-banner img {
+                filter: none !important;
+                opacity: 1 !important;
+            }
+        `;
+
         document.head.appendChild(style);
     }
 
-   function installYouSaveMeBackgroundFix() {
-    if (document.getElementById("youSaveMeBackgroundFix")) return;
+    installYouSaveMeBackgroundFix();
 
-    const style = document.createElement("style");
-    style.id = "youSaveMeBackgroundFix";
+    async function installBlogExtras() {
+        const realityBlog = findBlog("you-are-my-reality");
 
-    style.textContent = `
-        [data-blog-id="you-save-me"] {
-            --blog-bg: #aeaeb3 !important;
-            --blog-surface: #aeaeb3 !important;
-            --blog-text: #ffffff !important;
-            --blog-accent: #aeaeb3 !important;
-
-            background: #aeaeb3 !important;
-        }
-
-        [data-blog-id="you-save-me"] .amino-reader-body,
-        [data-blog-id="you-save-me"] .amino-reader-content,
-        [data-blog-id="you-save-me"] .amino-content,
-        [data-blog-id="you-save-me"] .blog-content {
-            background: #aeaeb3 !important;
-        }
-
-        [data-blog-id="you-save-me"] .amino-content-paragraph,
-        [data-blog-id="you-save-me"] .amino-content-quote,
-        [data-blog-id="you-save-me"] .amino-content-heading {
-            background: #aeaeb3 !important;
-            color: #ffffff !important;
-        }
-
-        [data-blog-id="you-save-me"] .amino-content-banner,
-        [data-blog-id="you-save-me"] .amino-content-banner.amino-content-image-free {
-            background: #aeaeb3 !important;
-            box-shadow: none !important;
-        }
-
-        /* NO modifica las imágenes */
-        [data-blog-id="you-save-me"] .amino-content-banner img {
-            filter: none !important;
-            opacity: 1 !important;
-        }
-    `;
-
-    document.head.appendChild(style);
-}
-
+        if (realityBlog && Array.isArray(realityBlog.blocks)) {
+            const realityBanners = [
+                {
+                    id: "reality-extra-miffy",
+                    src: "img/reality-banner-miffy.svg",
+                    b64: "img/reality-banner-miffy.b64",
+                    alt: "Conejito asomándose sobre fondo rojo",
+                    after: "felicidad silenciosa"
+                },
+                {
+                    id: "reality-extra-couple",
+                    src: "img/reality-banner-couple.svg",
+                    alt: "Pareja mirándose en un banner rojo y blanco",
+                    after: "lo cotidiano en algo que deseo cuidar"
+                },
+                {
+                    id: "reality-extra-snoopy",
+                    src: "img/reality-banner-snoopy.svg",
+                    b64: "img/reality-banner-snoopy.b64",
+                    alt: "Snoopy sobre fondo rojo",
+                    after: "seguir creciendo con paciencia"
+                },
+                {
+                    id: "reality-extra-snoopy-reading",
+                    src: "img/reality-banner-snoopy-reading.svg",
+                    b64: "img/reality-banner-snoopy-reading.b64",
+                    alt: "Snoopy leyendo el periódico sobre fondo rojo",
+                    after: "volvemos por voluntad"
+                },
+                {
+                    id: "reality-extra-winter",
+                    src: "img/reality-banner-winter.svg",
+                    alt: "Pareja con bufandas en tonos rojos",
+                    after: "seguir eligiéndonos desde la libertad"
+                },
+                {
+                    id: "reality-extra-love",
+                    src: "img/reality-banner-love.svg",
+                    alt: "Banner rojo con estrellas y el texto japonés 愛してる",
+                    after: "Tú eres mi realidad"
+                }
+            ];
 
             for (const banner of realityBanners) {
                 banner.src = await b64Image(banner.b64, banner.src);
@@ -194,6 +270,7 @@
         }
 
         const saveMeBlog = findBlog("you-save-me");
+
         if (saveMeBlog && Array.isArray(saveMeBlog.blocks)) {
             const saveMeBanners = [
                 {
@@ -228,14 +305,21 @@
                 }
             ];
 
-        saveMeBanners.forEach(function (banner) {
-    banner.layout = "free";
-    insertImageAfterText(saveMeBlog, banner);
-});
+            /* Importante: NO se recolorea, redibuja ni modifica ningún banner. */
+            saveMeBanners.forEach(function (banner) {
+                banner.layout = "free";
+                insertImageAfterText(saveMeBlog, banner);
+            });
 
             applySaveMeTheme(saveMeBlog);
         }
-    });
+    }
+
+    if (document.readyState === "complete") {
+        installBlogExtras();
+    } else {
+        window.addEventListener("load", installBlogExtras, { once: true });
+    }
 
     if (String(location.hash || "").indexOf("#amino-share=") === 0) {
         history.replaceState(history.state, "", location.pathname + location.search);
