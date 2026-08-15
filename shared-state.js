@@ -23,6 +23,11 @@
     };
 
     const OVERRIDES_KEY = "amino-blog-overrides-v2";
+    const DRAFTS_KEY = "amino-blog-drafts-v2";
+
+    function cloneTheme(theme) {
+        return Object.assign({}, theme);
+    }
 
     function readOverrides() {
         try {
@@ -34,6 +39,51 @@
             return {};
         }
     }
+
+    /*
+     * Muy importante: todo guardado que pase por localStorage también pasa
+     * por aquí. Así el editor nunca puede volver a guardar otro tema para
+     * You Save Me por accidente.
+     */
+    const nativeSetItem = Storage.prototype.setItem;
+
+    Storage.prototype.setItem = function (key, value) {
+        let finalValue = value;
+
+        if (this === window.localStorage && key === OVERRIDES_KEY) {
+            try {
+                const parsed = JSON.parse(String(value));
+                if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+                    parsed["you-save-me"] = Object.assign({}, parsed["you-save-me"] || {}, {
+                        theme: cloneTheme(YOU_SAVE_ME_THEME),
+                        contentVersion: 1
+                    });
+                    finalValue = JSON.stringify(parsed);
+                }
+            } catch (error) {}
+        }
+
+        /* También corrige el borrador del editor para que al recuperarlo no
+           reaparezca el tema anterior. */
+        if (this === window.localStorage && key === DRAFTS_KEY) {
+            try {
+                const drafts = JSON.parse(String(value));
+                if (drafts && typeof drafts === "object" && !Array.isArray(drafts)) {
+                    Object.keys(drafts).forEach(function (draftKey) {
+                        const draft = drafts[draftKey];
+                        const state = draft && draft.state;
+                        if (state && state.id === "you-save-me") {
+                            state.theme = cloneTheme(YOU_SAVE_ME_THEME);
+                            state.contentVersion = 1;
+                        }
+                    });
+                    finalValue = JSON.stringify(drafts);
+                }
+            } catch (error) {}
+        }
+
+        return nativeSetItem.call(this, key, finalValue);
+    };
 
     function saveOverrides(value) {
         try {
@@ -48,23 +98,22 @@
         const overrides = readOverrides();
 
         overrides["you-are-my-reality"] = Object.assign({}, overrides["you-are-my-reality"] || {}, {
-            theme: RED_THEME,
+            theme: cloneTheme(RED_THEME),
             contentVersion: 2
         });
 
         overrides["my-world-with-you"] = Object.assign({}, overrides["my-world-with-you"] || {}, {
-            theme: RED_THEME,
+            theme: cloneTheme(RED_THEME),
             contentVersion: 2
         });
 
         overrides["happy-birthday-my-love"] = Object.assign({}, overrides["happy-birthday-my-love"] || {}, {
-            theme: HAPPY_BIRTHDAY_THEME,
+            theme: cloneTheme(HAPPY_BIRTHDAY_THEME),
             contentVersion: 2
         });
 
-        /* Conserva texto, portada y bloques; únicamente fija el tema. */
         overrides["you-save-me"] = Object.assign({}, overrides["you-save-me"] || {}, {
-            theme: YOU_SAVE_ME_THEME,
+            theme: cloneTheme(YOU_SAVE_ME_THEME),
             contentVersion: 1
         });
 
@@ -123,14 +172,12 @@
     }
 
     function applySaveMeThemeToData(blog) {
-        if (blog) blog.theme = Object.assign({}, YOU_SAVE_ME_THEME);
+        if (blog) {
+            blog.theme = cloneTheme(YOU_SAVE_ME_THEME);
+            blog.contentVersion = 1;
+        }
     }
 
-    /*
-     * Fuerza #AEAEB3 sobre el DOM final. Esto evita que el variant "diary"
-     * vuelva a aplicar sus tarjetas oscuras después de cargar el tema.
-     * No se modifica ningún <img>.
-     */
     function forceYouSaveMeFlatColor() {
         const roots = document.querySelectorAll('[data-blog-id="you-save-me"]');
 
@@ -171,8 +218,6 @@
                 element.style.setProperty("color", "#ffffff", "important");
                 element.style.setProperty("border-color", "#aeaeb3", "important");
             });
-
-            /* Importante: no se aplica filter, opacity, canvas ni recolor a imágenes. */
         });
     }
 
@@ -213,7 +258,7 @@
                 box-shadow: none !important;
             }
 
-            /* Los banners/imágenes quedan originales. */
+            /* No altera los banners. */
             [data-blog-id="you-save-me"] img {
                 filter: none !important;
                 opacity: 1 !important;
@@ -234,7 +279,6 @@
         });
     }
 
-    /* El lector se construye dinámicamente; por eso se vuelve a aplicar al aparecer. */
     const observer = new MutationObserver(queueForceYouSaveMe);
     observer.observe(document.documentElement, {
         childList: true,
@@ -242,6 +286,83 @@
         attributes: true,
         attributeFilter: ["data-blog-id", "data-blog-variant", "style", "class"]
     });
+
+    /*
+     * Detectamos cuándo el editor abierto corresponde a You Save Me.
+     * Antes de que blog-editor.js ejecute su Guardar, enviamos los cuatro
+     * colores correctos mediante sus propios eventos input. Así el payload
+     * que crea persistEditor ya sale correcto desde origen.
+     */
+    let editingYouSaveMe = false;
+
+    function forceEditorSaveMeTheme() {
+        if (!editingYouSaveMe) return;
+
+        const values = [
+            ["blogBackgroundColor", "#aeaeb3"],
+            ["blogSurfaceColor", "#aeaeb3"],
+            ["blogTextColor", "#ffffff"],
+            ["blogAccentColor", "#aeaeb3"]
+        ];
+
+        values.forEach(function (entry) {
+            const input = document.getElementById(entry[0]);
+            if (!input) return;
+            if (input.value.toLowerCase() !== entry[1]) {
+                input.value = entry[1];
+                input.dispatchEvent(new Event("input", { bubbles: true }));
+            }
+        });
+    }
+
+    document.addEventListener("click", function (event) {
+        const editCardButton = event.target && event.target.closest
+            ? event.target.closest('[data-feed-action="edit"]')
+            : null;
+
+        if (editCardButton) {
+            const card = editCardButton.closest(".managed-blog-card");
+            editingYouSaveMe = Boolean(card && card.dataset.blogId === "you-save-me");
+            if (editingYouSaveMe) {
+                setTimeout(forceEditorSaveMeTheme, 0);
+            }
+            return;
+        }
+
+        const readerEdit = event.target && event.target.closest
+            ? event.target.closest("#blogEditBtn")
+            : null;
+
+        if (readerEdit) {
+            const readerRoot = document.querySelector('.modal-blog[data-blog-id="you-save-me"]');
+            editingYouSaveMe = Boolean(readerRoot);
+            if (editingYouSaveMe) {
+                setTimeout(forceEditorSaveMeTheme, 0);
+            }
+            return;
+        }
+
+        const saveButton = event.target && event.target.closest
+            ? event.target.closest("#publishPost")
+            : null;
+
+        if (saveButton && editingYouSaveMe) {
+            /* Este evento está en capture: ocurre ANTES del persistEditor. */
+            forceEditorSaveMeTheme();
+
+            setTimeout(function () {
+                const saveMeBlog = findBlog("you-save-me");
+                applySaveMeThemeToData(saveMeBlog);
+                keepFixedThemes();
+                queueForceYouSaveMe();
+            }, 0);
+
+            setTimeout(function () {
+                keepFixedThemes();
+                queueForceYouSaveMe();
+            }, 150);
+        }
+    }, true);
 
     async function installBlogExtras() {
         const realityBlog = findBlog("you-are-my-reality");
@@ -341,21 +462,6 @@
             queueForceYouSaveMe();
         }
     }
-
-    /* Si Guardar vuelve a escribir el tema, lo dejamos fijo en #AEAEB3 sin borrar el contenido. */
-    document.addEventListener("click", function (event) {
-        const target = event.target && event.target.closest ? event.target.closest("#publishPost") : null;
-        if (!target) return;
-
-        setTimeout(function () {
-            keepFixedThemes();
-            queueForceYouSaveMe();
-        }, 0);
-        setTimeout(function () {
-            keepFixedThemes();
-            queueForceYouSaveMe();
-        }, 150);
-    }, true);
 
     if (document.readyState === "complete") {
         installBlogExtras();
