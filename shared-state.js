@@ -1,79 +1,369 @@
 (function () {
     "use strict";
 
-    const RED_THEME = {
-        background: "#ff0006",
-        surface: "#fe0104",
-        text: "#fff4f4",
-        accent: "#d94962"
-    };
-
-    const HAPPY_BIRTHDAY_THEME = {
-        background: "#170713",
-        surface: "#291022",
-        text: "#fff1fb",
-        accent: "#e756bd"
-    };
-
-    const YOU_SAVE_ME_THEME = {
-        background: "#aeaeb3",
-        surface: "#aeaeb3",
-        text: "#ffffff",
-        accent: "#aeaeb3"
-    };
-
     const OVERRIDES_KEY = "amino-blog-overrides-v2";
+    const DRAFTS_KEY = "amino-blog-drafts-v2";
 
-    function readOverrides() {
+    const FIXED_THEMES = {
+        "you-are-my-reality": {
+            background: "#ff0006",
+            surface: "#fe0104",
+            text: "#fff4f4",
+            accent: "#d94962"
+        },
+        "my-world-with-you": {
+            background: "#ff0006",
+            surface: "#fe0104",
+            text: "#fff4f4",
+            accent: "#d94962"
+        },
+        "happy-birthday-my-love": {
+            background: "#170713",
+            surface: "#291022",
+            text: "#fff1fb",
+            accent: "#e756bd"
+        },
+        "you-save-me": {
+            background: "#aeaeb3",
+            surface: "#aeaeb3",
+            text: "#ffffff",
+            accent: "#aeaeb3"
+        }
+    };
+
+    const CONTENT_VERSIONS = {
+        "you-are-my-reality": 2,
+        "my-world-with-you": 2,
+        "happy-birthday-my-love": 2,
+        "you-save-me": 1
+    };
+
+    const nativeSetItem = Storage.prototype.setItem;
+
+    function cloneTheme(theme) {
+        return {
+            background: theme.background,
+            surface: theme.surface,
+            text: theme.text,
+            accent: theme.accent
+        };
+    }
+
+    function parseObject(raw) {
         try {
-            const raw = localStorage.getItem(OVERRIDES_KEY);
-            if (!raw) return {};
             const parsed = JSON.parse(raw);
             return parsed && typeof parsed === "object" && !Array.isArray(parsed)
                 ? parsed
+                : null;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function fixOverridesObject(overrides) {
+        if (!overrides || typeof overrides !== "object" || Array.isArray(overrides)) {
+            overrides = {};
+        }
+
+        Object.keys(FIXED_THEMES).forEach(function (blogId) {
+            const previous = overrides[blogId] &&
+                typeof overrides[blogId] === "object" &&
+                !Array.isArray(overrides[blogId])
+                ? overrides[blogId]
                 : {};
-        } catch (error) {
-            return {};
-        }
+
+            overrides[blogId] = Object.assign({}, previous, {
+                theme: cloneTheme(FIXED_THEMES[blogId]),
+                contentVersion: CONTENT_VERSIONS[blogId]
+            });
+        });
+
+        return overrides;
     }
 
-    function saveOverrides(value) {
+    function fixDraftsObject(drafts) {
+        if (!drafts || typeof drafts !== "object" || Array.isArray(drafts)) {
+            return drafts;
+        }
+
+        Object.keys(drafts).forEach(function (target) {
+            const entry = drafts[target];
+            if (!entry || !entry.state || typeof entry.state !== "object") return;
+
+            const blogId = entry.state.id;
+            if (!FIXED_THEMES[blogId]) return;
+
+            entry.state.theme = cloneTheme(FIXED_THEMES[blogId]);
+            entry.state.contentVersion = CONTENT_VERSIONS[blogId];
+        });
+
+        return drafts;
+    }
+
+    function sanitizeExistingStorage() {
         try {
-            localStorage.setItem(OVERRIDES_KEY, JSON.stringify(value));
-            return true;
+            const raw = localStorage.getItem(OVERRIDES_KEY);
+            const overrides = raw ? parseObject(raw) : {};
+            if (overrides !== null) {
+                nativeSetItem.call(
+                    localStorage,
+                    OVERRIDES_KEY,
+                    JSON.stringify(fixOverridesObject(overrides))
+                );
+            }
+
+            const draftRaw = localStorage.getItem(DRAFTS_KEY);
+            const drafts = draftRaw ? parseObject(draftRaw) : null;
+            if (drafts) {
+                nativeSetItem.call(
+                    localStorage,
+                    DRAFTS_KEY,
+                    JSON.stringify(fixDraftsObject(drafts))
+                );
+            }
         } catch (error) {
-            return false;
+            // El editor mostrará su aviso normal si el navegador bloquea localStorage.
         }
     }
 
-    function keepFixedThemes() {
-        const overrides = readOverrides();
+    /*
+     * Un solo punto de guardado:
+     * cualquier escritura del editor en overrides o borradores conserva los temas fijos.
+     * Texto, portada, orden e imágenes no se alteran.
+     */
+    function installStorageGuard() {
+        if (Storage.prototype.__aminoThemeGuardInstalled) return;
 
-        overrides["you-are-my-reality"] = Object.assign(
-            {}, overrides["you-are-my-reality"] || {},
-            { theme: RED_THEME, contentVersion: 2 }
-        );
+        Storage.prototype.setItem = function (key, value) {
+            let nextValue = value;
 
-        overrides["my-world-with-you"] = Object.assign(
-            {}, overrides["my-world-with-you"] || {},
-            { theme: RED_THEME, contentVersion: 2 }
-        );
+            if (this === localStorage && key === OVERRIDES_KEY) {
+                const parsed = parseObject(String(value));
+                if (parsed) {
+                    nextValue = JSON.stringify(fixOverridesObject(parsed));
+                }
+            } else if (this === localStorage && key === DRAFTS_KEY) {
+                const parsed = parseObject(String(value));
+                if (parsed) {
+                    nextValue = JSON.stringify(fixDraftsObject(parsed));
+                }
+            }
 
-        overrides["happy-birthday-my-love"] = Object.assign(
-            {}, overrides["happy-birthday-my-love"] || {},
-            { theme: HAPPY_BIRTHDAY_THEME, contentVersion: 2 }
-        );
+            return nativeSetItem.call(this, key, nextValue);
+        };
 
-        /* Mantiene contenido/portada/bloques y solo fija el tema de You Save Me. */
-        overrides["you-save-me"] = Object.assign(
-            {}, overrides["you-save-me"] || {},
-            { theme: YOU_SAVE_ME_THEME, contentVersion: 1 }
-        );
-
-        saveOverrides(overrides);
+        Object.defineProperty(Storage.prototype, "__aminoThemeGuardInstalled", {
+            value: true,
+            configurable: true
+        });
     }
 
-    keepFixedThemes();
+    sanitizeExistingStorage();
+    installStorageGuard();
+
+    function fixedThemeFor(blogId) {
+        return FIXED_THEMES[blogId] || null;
+    }
+
+    function applyThemeVars(element, blogId) {
+        const theme = fixedThemeFor(blogId);
+        if (!element || !theme) return;
+
+        element.style.setProperty("--blog-bg", theme.background);
+        element.style.setProperty("--blog-surface", theme.surface);
+        element.style.setProperty("--blog-text", theme.text);
+        element.style.setProperty("--blog-accent", theme.accent);
+    }
+
+    function enforceThemesInData() {
+        if (typeof blogsData === "undefined" || !Array.isArray(blogsData)) return;
+
+        blogsData.forEach(function (blog) {
+            if (blog && FIXED_THEMES[blog.id]) {
+                blog.theme = cloneTheme(FIXED_THEMES[blog.id]);
+                blog.contentVersion = CONTENT_VERSIONS[blog.id];
+            }
+        });
+    }
+
+    let activeEditorBlogId = null;
+
+    const themeInputMap = {
+        blogBackgroundColor: "background",
+        blogSurfaceColor: "surface",
+        blogTextColor: "text",
+        blogAccentColor: "accent"
+    };
+
+    function forceThemeIntoEditor(blogId) {
+        const theme = fixedThemeFor(blogId);
+        if (!theme) return;
+
+        Object.keys(themeInputMap).forEach(function (inputId) {
+            const input = document.getElementById(inputId);
+            const field = themeInputMap[inputId];
+            if (!input) return;
+
+            if (input.value.toLowerCase() !== theme[field]) {
+                input.value = theme[field];
+                input.dispatchEvent(new Event("input", { bubbles: true }));
+            }
+        });
+
+        const preview = document.querySelector(".editor-preview-card");
+        if (preview) applyThemeVars(preview, blogId);
+    }
+
+    function readerBlogId() {
+        const reader = document.querySelector("#blogModal .modal-blog");
+        return reader ? reader.getAttribute("data-blog-id") : "";
+    }
+
+    /*
+     * Captura la navegación del editor para saber exactamente qué blog se está editando.
+     * Antes de Guardar se sincronizan los cuatro inputs, de modo que persistEditor()
+     * recibe ya el tema correcto y también actualiza el blog en memoria correctamente.
+     */
+    document.addEventListener("click", function (event) {
+        const target = event.target;
+
+        const feedEdit = target.closest &&
+            target.closest(".managed-blog-card [data-feed-action='edit']");
+        if (feedEdit) {
+            const card = feedEdit.closest(".managed-blog-card");
+            activeEditorBlogId = card ? card.dataset.blogId : null;
+            setTimeout(function () {
+                forceThemeIntoEditor(activeEditorBlogId);
+            }, 0);
+            return;
+        }
+
+        if (target.closest && target.closest("#blogEditBtn")) {
+            activeEditorBlogId = readerBlogId() || null;
+            setTimeout(function () {
+                forceThemeIntoEditor(activeEditorBlogId);
+            }, 0);
+            return;
+        }
+
+        if (target.closest && target.closest("#createPost")) {
+            activeEditorBlogId = null;
+            return;
+        }
+
+        if (target.closest && target.closest("[data-blog-theme-preset]") &&
+            fixedThemeFor(activeEditorBlogId)) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            forceThemeIntoEditor(activeEditorBlogId);
+            const status = document.getElementById("draftStatus");
+            if (status) {
+                status.textContent = "Este blog usa un tema fijo";
+                status.dataset.state = "saved";
+            }
+            return;
+        }
+
+        if (target.closest && target.closest("#publishPost") &&
+            fixedThemeFor(activeEditorBlogId)) {
+            forceThemeIntoEditor(activeEditorBlogId);
+        }
+    }, true);
+
+    /*
+     * Si el usuario intenta mover un selector de color en un blog con tema fijo,
+     * el mismo evento que recibe blog-editor.js ya lleva el valor correcto.
+     */
+    document.addEventListener("input", function (event) {
+        const field = themeInputMap[event.target && event.target.id];
+        const theme = fixedThemeFor(activeEditorBlogId);
+        if (!field || !theme) return;
+
+        if (event.target.value.toLowerCase() !== theme[field]) {
+            event.target.value = theme[field];
+        }
+    }, true);
+
+    function installScopedThemeCss() {
+        if (document.getElementById("fixedBlogThemeCss")) return;
+
+        const style = document.createElement("style");
+        style.id = "fixedBlogThemeCss";
+        style.textContent = `
+            /* Solo lector y vista previa. Las tarjetas del perfil NO se tematizan. */
+            #blogModal .modal-blog[data-blog-id="you-save-me"],
+            #blogModal .modal-blog[data-blog-id="you-save-me"] .amino-reader-header,
+            #blogModal .modal-blog[data-blog-id="you-save-me"] .amino-reader-author,
+            #blogModal .modal-blog[data-blog-id="you-save-me"] .amino-reader-body,
+            #blogModal .modal-blog[data-blog-id="you-save-me"] .blog-modal-comments,
+            .editor-preview-card[data-blog-id="you-save-me"],
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-reader-body {
+                background: #aeaeb3 !important;
+                background-color: #aeaeb3 !important;
+            }
+
+            #blogModal .modal-blog[data-blog-id="you-save-me"] .amino-content-paragraph,
+            #blogModal .modal-blog[data-blog-id="you-save-me"] .amino-content-heading,
+            #blogModal .modal-blog[data-blog-id="you-save-me"] .amino-content-quote,
+            #blogModal .modal-blog[data-blog-id="you-save-me"] .amino-content-divider,
+            #blogModal .modal-blog[data-blog-id="you-save-me"] .amino-content-banner.amino-content-image-free,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-paragraph,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-heading,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-quote,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-divider,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-banner.amino-content-image-free {
+                background: #aeaeb3 !important;
+                background-color: #aeaeb3 !important;
+                box-shadow: none !important;
+            }
+
+            #blogModal .modal-blog[data-blog-id="you-save-me"] .amino-content-paragraph,
+            #blogModal .modal-blog[data-blog-id="you-save-me"] .amino-content-heading,
+            #blogModal .modal-blog[data-blog-id="you-save-me"] .amino-content-quote,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-paragraph,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-heading,
+            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-quote {
+                color: #ffffff !important;
+                border-color: #aeaeb3 !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    installScopedThemeCss();
+
+    /*
+     * Observador limitado al lector y a la vista previa.
+     * No observa el feed ni reescribe estilos de las tarjetas.
+     */
+    function refreshVisibleFixedThemes() {
+        const reader = document.querySelector("#blogModal .modal-blog");
+        if (reader) applyThemeVars(reader, reader.getAttribute("data-blog-id"));
+
+        const preview = document.querySelector(".editor-preview-card");
+        if (preview) applyThemeVars(preview, preview.getAttribute("data-blog-id"));
+    }
+
+    const reader = document.querySelector("#blogModal .modal-blog");
+    const preview = document.querySelector(".editor-preview-card");
+    const visibleObserver = new MutationObserver(refreshVisibleFixedThemes);
+
+    if (reader) {
+        visibleObserver.observe(reader, {
+            attributes: true,
+            attributeFilter: ["data-blog-id", "style"],
+            childList: true,
+            subtree: true
+        });
+    }
+    if (preview) {
+        visibleObserver.observe(preview, {
+            attributes: true,
+            attributeFilter: ["data-blog-id", "style"],
+            childList: true,
+            subtree: true
+        });
+    }
 
     async function b64Image(path, fallback) {
         if (!path) return fallback;
@@ -104,7 +394,7 @@
         if (existing) {
             existing.src = banner.src;
             existing.alt = banner.alt;
-            existing.layout = banner.layout || "banner";
+            existing.layout = "free";
             return;
         }
 
@@ -113,7 +403,7 @@
             type: "image",
             src: banner.src,
             alt: banner.alt,
-            layout: banner.layout || "banner"
+            layout: "free"
         };
 
         const index = blog.blocks.findIndex(function (block) {
@@ -126,120 +416,10 @@
         else blog.blocks.push(imageBlock);
     }
 
-    /*
-     * IMPORTANTE:
-     * El gris de You Save Me se aplica SOLO al lector abierto y a la vista previa.
-     * No toca .managed-blog-card, así que la tarjeta del perfil conserva su diseño.
-     */
-    function installYouSaveMeReaderTheme() {
-        if (document.getElementById("youSaveMeReaderTheme")) return;
-
-        const style = document.createElement("style");
-        style.id = "youSaveMeReaderTheme";
-        style.textContent = `
-            .modal-blog[data-blog-id="you-save-me"],
-            .editor-preview-card[data-blog-id="you-save-me"] {
-                --blog-bg: #aeaeb3 !important;
-                --blog-surface: #aeaeb3 !important;
-                --blog-text: #ffffff !important;
-                --blog-accent: #aeaeb3 !important;
-                background: #aeaeb3 !important;
-                background-color: #aeaeb3 !important;
-            }
-
-            .modal-blog[data-blog-id="you-save-me"] .amino-reader-header,
-            .modal-blog[data-blog-id="you-save-me"] .amino-reader-author,
-            .modal-blog[data-blog-id="you-save-me"] .amino-reader-body,
-            .modal-blog[data-blog-id="you-save-me"] .amino-reader-content,
-            .modal-blog[data-blog-id="you-save-me"] .blog-modal-body,
-            .modal-blog[data-blog-id="you-save-me"] .blog-modal-header,
-            .modal-blog[data-blog-id="you-save-me"] .blog-modal-meta,
-            .modal-blog[data-blog-id="you-save-me"] .amino-content-paragraph,
-            .modal-blog[data-blog-id="you-save-me"] .amino-content-heading,
-            .modal-blog[data-blog-id="you-save-me"] .amino-content-quote,
-            .modal-blog[data-blog-id="you-save-me"] .amino-content-divider,
-            .modal-blog[data-blog-id="you-save-me"] .amino-content-banner,
-            .modal-blog[data-blog-id="you-save-me"] .amino-content-image-free,
-            .modal-blog[data-blog-id="you-save-me"] .blog-modal-comments,
-            .editor-preview-card[data-blog-id="you-save-me"] .amino-reader-body,
-            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-paragraph,
-            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-heading,
-            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-quote,
-            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-divider,
-            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-banner,
-            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-image-free {
-                background: #aeaeb3 !important;
-                background-color: #aeaeb3 !important;
-                box-shadow: none !important;
-            }
-
-            .modal-blog[data-blog-id="you-save-me"] .amino-content-paragraph,
-            .modal-blog[data-blog-id="you-save-me"] .amino-content-heading,
-            .modal-blog[data-blog-id="you-save-me"] .amino-content-quote,
-            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-paragraph,
-            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-heading,
-            .editor-preview-card[data-blog-id="you-save-me"] .amino-content-quote {
-                color: #ffffff !important;
-                border-color: #aeaeb3 !important;
-            }
-
-            /* Banners intactos: no filtro, no opacidad, no recolor. */
-            .modal-blog[data-blog-id="you-save-me"] img,
-            .editor-preview-card[data-blog-id="you-save-me"] img {
-                filter: none !important;
-                opacity: 1 !important;
-            }
-        `;
-        document.head.appendChild(style);
-    }
-
-    installYouSaveMeReaderTheme();
-
-    function forceSaveMeEditorColors() {
-        const titleInput = document.getElementById("newPostTitle");
-        if (!titleInput || titleInput.value.trim().toLowerCase() !== "you save me") {
-            return false;
-        }
-
-        const values = [
-            ["blogBackgroundColor", "#aeaeb3"],
-            ["blogSurfaceColor", "#aeaeb3"],
-            ["blogTextColor", "#ffffff"],
-            ["blogAccentColor", "#aeaeb3"]
-        ];
-
-        values.forEach(function (entry) {
-            const input = document.getElementById(entry[0]);
-            if (!input) return;
-            input.value = entry[1];
-            /* Actualiza editorState dentro de blog-editor.js antes de persistEditor(). */
-            input.dispatchEvent(new Event("input", { bubbles: true }));
-        });
-
-        return true;
-    }
-
-    /*
-     * Se ejecuta en capture: ocurre ANTES del listener de Guardar de blog-editor.js.
-     * Así el payload ya sale con #AEAEB3 y no se corrige tarde.
-     */
-    document.addEventListener("click", function (event) {
-        const button = event.target && event.target.closest
-            ? event.target.closest("#publishPost")
-            : null;
-        if (!button) return;
-
-        const isSaveMe = forceSaveMeEditorColors();
-        if (!isSaveMe) return;
-
-        /* Respaldo después del guardado, sin alterar textos ni bloques. */
-        setTimeout(keepFixedThemes, 0);
-        setTimeout(keepFixedThemes, 150);
-    }, true);
-
     async function installBlogExtras() {
-        const realityBlog = findBlog("you-are-my-reality");
+        enforceThemesInData();
 
+        const realityBlog = findBlog("you-are-my-reality");
         if (realityBlog && Array.isArray(realityBlog.blocks)) {
             const realityBanners = [
                 {
@@ -285,14 +465,13 @@
 
             for (const banner of realityBanners) {
                 banner.src = await b64Image(banner.b64, banner.src);
-                banner.layout = "free";
                 insertImageAfterText(realityBlog, banner);
             }
         }
 
         const saveMeBlog = findBlog("you-save-me");
         if (saveMeBlog && Array.isArray(saveMeBlog.blocks)) {
-            const saveMeBanners = [
+            [
                 {
                     id: "save-me-banner-1",
                     src: "img/banner1 saveme.png",
@@ -323,15 +502,13 @@
                     alt: "Banner 5 de You Save Me",
                     after: "Me salvaste de la idea de que debía salvarme a solas"
                 }
-            ];
-
-            saveMeBanners.forEach(function (banner) {
-                banner.layout = "free";
+            ].forEach(function (banner) {
                 insertImageAfterText(saveMeBlog, banner);
             });
-
-            saveMeBlog.theme = Object.assign({}, YOU_SAVE_ME_THEME);
         }
+
+        enforceThemesInData();
+        refreshVisibleFixedThemes();
     }
 
     if (document.readyState === "complete") {
