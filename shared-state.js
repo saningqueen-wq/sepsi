@@ -65,88 +65,135 @@
         }
     }
 
-    window.addEventListener("load", async function () {
-        if (typeof blogsData === "undefined" || !Array.isArray(blogsData)) return;
+    function findBlog(id) {
+        if (typeof blogsData === "undefined" || !Array.isArray(blogsData)) return null;
+        return blogsData.find(function (item) {
+            return item && item.id === id;
+        }) || null;
+    }
 
-        const blog = blogsData.find(function (item) {
-            return item && item.id === "you-are-my-reality";
-        });
+    function insertImageAfterText(blog, banner) {
         if (!blog || !Array.isArray(blog.blocks)) return;
 
-        const banners = [
-            {
-                id: "reality-extra-miffy",
-                src: "img/reality-banner-miffy.svg",
-                b64: "img/reality-banner-miffy.b64",
-                alt: "Conejito asomándose sobre fondo rojo",
-                after: "felicidad silenciosa"
-            },
-            {
-                id: "reality-extra-couple",
-                src: "img/reality-banner-couple.svg",
-                alt: "Pareja mirándose en un banner rojo y blanco",
-                after: "lo cotidiano en algo que deseo cuidar"
-            },
-            {
-                id: "reality-extra-snoopy",
-                src: "img/reality-banner-snoopy.svg",
-                b64: "img/reality-banner-snoopy.b64",
-                alt: "Snoopy sobre fondo rojo",
-                after: "seguir creciendo con paciencia"
-            },
-            {
-                id: "reality-extra-snoopy-reading",
-                src: "img/reality-banner-snoopy-reading.svg",
-                b64: "img/reality-banner-snoopy-reading.b64",
-                alt: "Snoopy leyendo el periódico sobre fondo rojo",
-                after: "volvemos por voluntad"
-            },
-            {
-                id: "reality-extra-winter",
-                src: "img/reality-banner-winter.svg",
-                alt: "Pareja con bufandas en tonos rojos",
-                after: "seguir eligiéndonos desde la libertad"
-            },
-            {
-                id: "reality-extra-love",
-                src: "img/reality-banner-love.svg",
-                alt: "Banner rojo con estrellas y el texto japonés 愛してる",
-                after: "Tú eres mi realidad"
-            }
-        ];
+        const existing = blog.blocks.find(function (block) {
+            return block && block.id === banner.id;
+        });
 
-        for (const banner of banners) {
-            const resolvedSrc = await b64Image(banner.b64, banner.src);
-            const existing = blog.blocks.find(function (block) {
-                return block && block.id === banner.id;
-            });
-
-            if (existing) {
-                existing.src = resolvedSrc;
-                existing.alt = banner.alt;
-                continue;
-            }
-
-            const imageBlock = {
-                id: banner.id,
-                type: "image",
-                src: resolvedSrc,
-                alt: banner.alt,
-                layout: "free"
-            };
-
-            const index = blog.blocks.findIndex(function (block) {
-                return block && typeof block.text === "string" && block.text.indexOf(banner.after) >= 0;
-            });
-
-            if (index >= 0) blog.blocks.splice(index + 1, 0, imageBlock);
-            else blog.blocks.push(imageBlock);
+        if (existing) {
+            existing.src = banner.src;
+            existing.alt = banner.alt;
+            existing.layout = banner.layout || "banner";
+            return;
         }
 
-        document.querySelectorAll('img[src="img/reality-banner-miffy.svg"]').forEach(function (img) {
-            const block = blog.blocks.find(function (item) { return item && item.id === "reality-extra-miffy"; });
-            if (block) img.src = block.src;
+        const imageBlock = {
+            id: banner.id,
+            type: "image",
+            src: banner.src,
+            alt: banner.alt,
+            layout: banner.layout || "banner"
+        };
+
+        const index = blog.blocks.findIndex(function (block) {
+            return block && typeof block.text === "string" && block.text.indexOf(banner.after) >= 0;
         });
+
+        if (index >= 0) blog.blocks.splice(index + 1, 0, imageBlock);
+        else blog.blocks.push(imageBlock);
+    }
+
+    window.addEventListener("load", async function () {
+        const realityBlog = findBlog("you-are-my-reality");
+
+        if (realityBlog && Array.isArray(realityBlog.blocks)) {
+            const realityBanners = [
+                {
+                    id: "reality-extra-miffy",
+                    src: "img/reality-banner-miffy.svg",
+                    b64: "img/reality-banner-miffy.b64",
+                    alt: "Conejito asomándose sobre fondo rojo",
+                    after: "felicidad silenciosa"
+                },
+                {
+                    id: "reality-extra-couple",
+                    src: "img/reality-banner-couple.svg",
+                    alt: "Pareja mirándose en un banner rojo y blanco",
+                    after: "lo cotidiano en algo que deseo cuidar"
+                },
+                {
+                    id: "reality-extra-snoopy",
+                    src: "img/reality-banner-snoopy.svg",
+                    b64: "img/reality-banner-snoopy.b64",
+                    alt: "Snoopy sobre fondo rojo",
+                    after: "seguir creciendo con paciencia"
+                },
+                {
+                    id: "reality-extra-snoopy-reading",
+                    src: "img/reality-banner-snoopy-reading.svg",
+                    b64: "img/reality-banner-snoopy-reading.b64",
+                    alt: "Snoopy leyendo el periódico sobre fondo rojo",
+                    after: "volvemos por voluntad"
+                },
+                {
+                    id: "reality-extra-winter",
+                    src: "img/reality-banner-winter.svg",
+                    alt: "Pareja con bufandas en tonos rojos",
+                    after: "seguir eligiéndonos desde la libertad"
+                },
+                {
+                    id: "reality-extra-love",
+                    src: "img/reality-banner-love.svg",
+                    alt: "Banner rojo con estrellas y el texto japonés 愛してる",
+                    after: "Tú eres mi realidad"
+                }
+            ];
+
+            for (const banner of realityBanners) {
+                banner.src = await b64Image(banner.b64, banner.src);
+                banner.layout = "free";
+                insertImageAfterText(realityBlog, banner);
+            }
+        }
+
+        // Banners que subiste para el blog You Save Me.
+        // Se reparten entre las partes de la historia para que no queden todos juntos.
+        const saveMeBlog = findBlog("you-save-me");
+        if (saveMeBlog && Array.isArray(saveMeBlog.blocks)) {
+            [
+                {
+                    id: "save-me-banner-1",
+                    src: "img/banner1 saveme.png",
+                    alt: "Banner 1 de You Save Me",
+                    after: "atravesarlos sintiéndome completamente sola"
+                },
+                {
+                    id: "save-me-banner-2",
+                    src: "img/banner 2 saveme.png",
+                    alt: "Banner 2 de You Save Me",
+                    after: "merecía sentirme así"
+                },
+                {
+                    id: "save-me-banner-3",
+                    src: "img/banner3 saveme.png",
+                    alt: "Banner 3 de You Save Me",
+                    after: "mis ojos recordaron cómo encontrar la luz"
+                },
+                {
+                    id: "save-me-banner-4",
+                    src: "img/Banner 4 sabeme.png",
+                    alt: "Banner 4 de You Save Me",
+                    after: "una disculpa consciente sobre el silencio"
+                },
+                {
+                    id: "save-me-banner-5",
+                    src: "img/banner 5 de saveme.png",
+                    alt: "Banner 5 de You Save Me",
+                    after: "Me salvaste de la idea de que debía salvarme a solas"
+                }
+            ].forEach(function (banner) {
+                insertImageAfterText(saveMeBlog, banner);
+            });
+        }
     });
 
     if (String(location.hash || "").indexOf("#amino-share=") === 0) {
