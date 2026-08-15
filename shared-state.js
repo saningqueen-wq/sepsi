@@ -351,7 +351,7 @@
     if (reader) {
         visibleObserver.observe(reader, {
             attributes: true,
-            attributeFilter: ["data-blog-id", "style"],
+            attributeFilter: ["data-blog-id"],
             childList: true,
             subtree: true
         });
@@ -359,7 +359,7 @@
     if (preview) {
         visibleObserver.observe(preview, {
             attributes: true,
-            attributeFilter: ["data-blog-id", "style"],
+            attributeFilter: ["data-blog-id"],
             childList: true,
             subtree: true
         });
