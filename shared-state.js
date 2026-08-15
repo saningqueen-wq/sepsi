@@ -19,7 +19,7 @@
         background: "#2f2f31",
         surface: "#515156",
         text: "#f7f7f8",
-        accent: "#bdbdc3"
+        accent: "#aeaeb3"
     };
 
     const OVERRIDES_KEY = "amino-blog-overrides-v2";
