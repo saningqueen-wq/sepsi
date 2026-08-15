@@ -18,7 +18,7 @@
             accent: "#d94962"
         },
         "happy-birthday-my-love": {
-            background: "#170713",
+            background: "#d5cfed",
             surface: "#291022",
             text: "#fff1fb",
             accent: "#e756bd"
