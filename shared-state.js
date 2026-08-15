@@ -1,13 +1,20 @@
 (function () {
     "use strict";
 
-    // Color rojo fijo, tomado de la configuración que ya tenías guardada
-    // en "You Are My Reality".
-    const RED_THEME = {
-        background: "#630015",
-        surface: "#630015",
-        text: "#fff5f7",
-        accent: "#d94a63"
+    // Colores exactos de la captura del editor de "You Are My Reality".
+    const YOU_ARE_MY_REALITY_THEME = {
+        background: "#ff0006",
+        surface: "#fe0104",
+        text: "#fff4f4",
+        accent: "#d94962"
+    };
+
+    // Restauramos Happy Birthday al tema rosa/morado que tenía originalmente.
+    const HAPPY_BIRTHDAY_THEME = {
+        background: "#170713",
+        surface: "#291022",
+        text: "#fff1fb",
+        accent: "#e756bd"
     };
 
     const OVERRIDES_KEY = "amino-blog-overrides-v2";
@@ -29,26 +36,37 @@
         try {
             localStorage.setItem(OVERRIDES_KEY, JSON.stringify(value));
         } catch (error) {
-            // Si el navegador bloquea localStorage, el resto de la página sigue funcionando.
+            // La página puede seguir funcionando aunque localStorage esté bloqueado.
         }
     }
 
     const overrides = readOverrides();
 
-    // Happy Birthday queda siempre con el mismo rojo de You Are My Reality,
-    // incluso si antes se había guardado con el tema morado.
+    // Forzamos únicamente el tema de You Are My Reality sin tocar sus textos,
+    // imágenes, portada ni formato guardado.
+    overrides["you-are-my-reality"] = Object.assign(
+        {},
+        overrides["you-are-my-reality"] || {},
+        {
+            theme: YOU_ARE_MY_REALITY_THEME,
+            contentVersion: 2
+        }
+    );
+
+    // Corrige el cambio anterior que había puesto este rojo por error
+    // en Happy Birthday, conservando cualquier otro contenido editado.
     overrides["happy-birthday-my-love"] = Object.assign(
         {},
         overrides["happy-birthday-my-love"] || {},
         {
-            theme: RED_THEME,
+            theme: HAPPY_BIRTHDAY_THEME,
             contentVersion: 2
         }
     );
 
     saveOverrides(overrides);
 
-    // Ya no guardamos configuraciones dentro de la URL.
+    // No guardamos configuraciones dentro de la URL.
     if (String(location.hash || "").indexOf("#amino-share=") === 0) {
         history.replaceState(
             history.state,
