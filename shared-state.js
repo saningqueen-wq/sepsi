@@ -18,8 +18,8 @@
     const YOU_SAVE_ME_THEME = {
         background: "#aeaeb3",
         surface: "#aeaeb3",
-        text: "#f7f7f8",
-        accent: "#313131"
+        text: "ffffff",
+        accent: "#aeaeb3"
     };
 
     const OVERRIDES_KEY = "amino-blog-overrides-v2";
