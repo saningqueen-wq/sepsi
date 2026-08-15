@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>빛─❝ K a i ;;✦ | Amino</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="blog-editor.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =========================
+         PERFIL
+    ========================== -->
+
+    <section class="profile">
+
+        <div class="profile-cover" id="profileCover">
+
+            <!-- degradado -->
+            <div class="cover-dark"></div>
+
+            <!-- barra superior -->
+            <div class="profile-top">
+
+                <button class="circle-button">
+                    ←
+                </button>
+
+                <div class="online">
+                    <span></span>
+                    Conectado
+                </div>
+
+                <button class="dots-button">
+                    •••
+                </button>
+
+            </div>
+
+
+            <!-- PERFIL CENTRAL -->
+            <div class="profile-center">
+
+                <div class="avatar-box">
+
+                    <img
+                        id="avatar"
+                        src="img/perfil.jpg"
+                        alt="Avatar"
+                        onerror="this.src='https://i.pinimg.com/736x/0c/67/30/0c673029324220a35d23c2cf67862175.jpg'"
+                    >
+
+                    <div class="flower">
+                        ✿
+                    </div>
+
+                </div>
+
+
+                <h1>
+                    빛─❝ K a i ;;✦
+                </h1>
+
+
+                <div class="level-line">
+
+                    <span class="level-circle">
+                        LV17
+                    </span>
+
+                    <span class="level-name">
+                        Black Hoodie
+                    </span>
+
+                </div>
+
+
+                <!-- ETIQUETAS -->
+
+                <div class="tags">
+
+                    <span class="tag pink">
+                        ❛ 👑ˑ Prιnceѕιтa ᴷᵃᶤ ⁺ ˖˚ —✦
+                    </span>
+
+                    <span class="tag black">
+                        King sushi ⸼᮫ͯ.
+                    </span>
+
+                    <span class="tag">
+                        BTS♡ARMY
+                    </span>
+
+                    <span class="tag">
+                        K-Pop
+                    </span>
+
+                    <span class="tag">
+                        사랑
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="edit-profile"
+                    id="editProfile"
+                >
+                    ✎ Editar
+                </button>
+
+            </div>
+
+
+            <!-- PARTE INFERIOR PORTADA -->
+
+            <div class="profile-bottom">
+
+                <div class="streak">
+                    🏆 350 Buena Racha del Día
+                </div>
+
+                <div class="coins">
+                    🪙 271
+                    <button>+</button>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================
+             ESTADÍSTICAS
+        ========================= -->
+
+        <div class="statistics">
+
+            <div>
+                <strong>34.1K</strong>
+                <span>Reputación</span>
+            </div>
+
+            <div>
+                <strong>59</strong>
+                <span>Siguiendo</span>
+            </div>
+
+            <div>
+                <strong>633</strong>
+                <span>Seguidores</span>
+            </div>
+
+        </div>
+
+
+        <!-- ========================
+             BIO  (clicable)
+        ========================= -->
+
+        <section class="biography" id="biographySection">
+
+            <div class="bio-title">
+
+                <h2>
+                    Biografía
+                </h2>
+
+                <span>
+                    Miembro desde agosto 2026
+                </span>
+
+            </div>
+
+
+            <div class="bio-content" id="openBioModal">
+
+                <img
+                    src="img/perfil.jpg"
+                    alt=""
+                    onerror="this.src='https://i.pinimg.com/736x/e5/b5/83/e5b58356934fe64c47660553f611032c.jpg'"
+                >
+
+
+                <div id="bioText">
+
+                    <p>
+                        #/° w.elcome..ღ take my hand ♡
+                    </p>
+
+                    <p>
+                        ╭ ── ✦ ── ╮
+                    </p>
+
+                    <p>
+                        thinking out loud . . .
+                    </p>
+
+                    <p>
+                        ❝ kiss me under the light
+                        of a thousand stars ❞
+                    </p>
+
+                    <p>
+                        ╰ ── ♡ ── ╯
+                    </p>
+
+                </div>
+
+
+                <button class="bio-arrow">
+                    ›
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================
+             TABS AMINO
+        ========================= -->
+
+        <nav class="profile-tabs">
+
+            <button
+                class="profile-tab active"
+                data-section="posts"
+            >
+                Posts
+                <small>5</small>
+            </button>
+
+
+            <button
+                class="profile-tab"
+                data-section="wall"
+            >
+                Muro
+                <small>16</small>
+            </button>
+
+
+            <button
+                class="profile-tab"
+                data-section="wiki"
+            >
+                Wikis
+                <small>7</small>
+            </button>
+
+
+            <button
+                class="profile-tab"
+                data-section="saved"
+            >
+                Guardados
+            </button>
+
+        </nav>
+
+
+        <!-- =========================
+             POSTS
+        ========================== -->
+
+        <section
+            class="content-section active"
+            id="posts"
+        >
+
+            <button
+                id="createPost"
+                class="create-post"
+            >
+                <span>＋</span>
+                Crear una publicación nueva
+            </button>
+
+
+            <div class="section-name">
+                Mis publicaciones
+            </div>
+
+
+            <div
+                class="posts-list"
+                id="postsList"
+            >
+
+                <template id="legacyPostsFallback">
+
+                <!-- BLOG 1 -->
+                <article class="amino-post-card blog-card amino-feed-card" data-blog="0">
+                    <div class="amino-post-header">
+                        <span class="amino-post-time">hace 13 días</span>
+                        <button class="amino-post-dots">•••</button>
+                    </div>
+                    <div class="amino-post-text-row">
+                        <h3 class="amino-post-title"> 
+- ̗̀❪ you  are  my  reality ⸼᮫ͯ ❜❜↲</h3>
+                        <p class="amino-post-preview">Hay momentos donde todo parece difuso, como si el mundo estuviera envuelto en niebla...</p>
+                    </div>
+                    <div class="amino-post-images">
+                        <img src="img/blog1.jpg" onerror="this.src='https://i.pinimg.com/736x/e9/70/03/e97003a091125b9b3e5108ad646cc6e7.jpg'">
+                    </div>
+                    <div class="amino-post-footer">
+                        <button class="amino-post-action">♡ 205</button>
+                        <button class="amino-post-action">💬 13</button>
+                        <button class="amino-post-action share-btn">➦</button>
+                    </div>
+                </article>
+
+
+                <!-- BLOG 2 -->
+                <article class="amino-post-card blog-card amino-feed-card" data-blog="1">
+                    <div class="amino-post-header">
+                        <span class="amino-post-time">hace 20 días</span>
+                        <button class="amino-post-dots">•••</button>
+                    </div>
+                    <div class="amino-post-text-row">
+                        <h3 class="amino-post-title">  ❛ ˑ My Serendipity ᴷᵃᶤ ⁺ ˖˚</h3>
+                        <p class="amino-post-preview">Serendipidad: el arte de encontrar algo maravilloso sin haberlo buscado...</p>
+                    </div>
+                    <div class="amino-post-images">
+                        <img src="img/blog2.jpg" onerror="this.src='https://i.pinimg.com/736x/e1/d7/af/e1d7afc9e49e2cce50e25588264338c0.jpg'">
+                    </div>
+                    <div class="amino-post-footer">
+                        <button class="amino-post-action">♡ 112</button>
+                        <button class="amino-post-action">💬 8</button>
+                        <button class="amino-post-action share-btn">➦</button>
+                    </div>
+                </article>
+
+
+                <!-- BLOG 3 -->
+                <article class="amino-post-card blog-card amino-feed-card" data-blog="2">
+                    <div class="amino-post-header">
+                        <span class="amino-post-time">hace 1 mes</span>
+                        <button class="amino-post-dots">•••</button>
+                    </div>
+                    <div class="amino-post-text-row">
+                        <h3 class="amino-post-title">—(🥀) you  save  me</h3>
+                        <p class="amino-post-preview">A veces siento que caigo al vacío, pero siempre estás ahí para atraparme...</p>
+                    </div>
+                    <div class="amino-post-images">
+                        <img src="img/blog3.jpg" onerror="this.onerror=null;this.src='https://pbs.twimg.com/media/EV3hCaEUYAA3jgj.jpg'">
+                    </div>
+                    <div class="amino-post-footer">
+                        <button class="amino-post-action">♡ 88</button>
+                        <button class="amino-post-action">💬 5</button>
+                        <button class="amino-post-action share-btn">➦</button>
+                    </div>
+                </article>
+
+
+                <!-- BLOG 4 -->
+                <article class="amino-post-card blog-card amino-feed-card" data-blog="3">
+                    <div class="amino-post-header">
+                        <span class="amino-post-time">hace 1 mes</span>
+                        <button class="amino-post-dots">•••</button>
+                    </div>
+                    <div class="amino-post-text-row">
+                        <h3 class="amino-post-title"> —✦; My  world  with  you ❜↲</h3>
+                        <p class="amino-post-preview">Mi mundo era monocromático hasta que llegaste tú con todos tus colores...</p>
+                    </div>
+                    <div class="amino-post-images">
+                        <img src="img/blog4.jpg" onerror="this.onerror=null;this.src='https://pbs.twimg.com/media/Ei2F0DKWAAIF0Ij.jpg'">
+                    </div>
+                    <div class="amino-post-footer">
+                        <button class="amino-post-action">♡ 176</button>
+                        <button class="amino-post-action">💬 21</button>
+                        <button class="amino-post-action share-btn">➦</button>
+                    </div>
+                </article>
+
+
+                <!-- BLOG 5 -->
+                <article class="amino-post-card blog-card amino-feed-card" data-blog="4">
+                    <div class="amino-post-header">
+                        <span class="amino-post-time">hace 2 meses</span>
+                        <button class="amino-post-dots">•••</button>
+                    </div>
+                    <div class="amino-post-text-row">
+                        <h3 class="amino-post-title"> •❐ Mr .  jealous;;✦</h3>
+                        <p class="amino-post-preview">Incluso cuando intentas ocultarlo, esa mirada celosa te delata...</p>
+                    </div>
+                    <div class="amino-post-images">
+                        <img src="img/blog5.jpg" onerror="this.src='https://i.pinimg.com/736x/e2/cc/08/e2cc080655f4f11de7be16641022f6aa.jpg'">
+                    </div>
+                    <div class="amino-post-footer">
+                        <button class="amino-post-action">♡ 240</button>
+                        <button class="amino-post-action">💬 34</button>
+                        <button class="amino-post-action share-btn">➦</button>
+                    </div>
+                </article>
+                
+                <!-- BLOG 5 -->
+                <article class="amino-post-card blog-card amino-feed-card" data-blog="4">
+                    <div class="amino-post-header">
+                        <span class="amino-post-time">hace 2 meses</span>
+                        <button class="amino-post-dots">•••</button>
+                    </div>
+                    <div class="amino-post-text-row">
+                        <h3 class="amino-post-title"> Happy Birthyday My love ;;✦</h3>
+                        <p class="amino-post-preview">Incluso cuando intentas ocultarlo, esa mirada celosa te delata...</p>
+                    </div>
+                    <div class="amino-post-images">
+                        <img src="img/blog5.jpg" onerror="this.src='https://i.pinimg.com/736x/e2/cc/08/e2cc080655f4f11de7be16641022f6aa.jpg'">
+                    </div>
+                    <div class="amino-post-footer">
+                        <button class="amino-post-action">♡ 240</button>
+                        <button class="amino-post-action">💬 34</button>
+                        <button class="amino-post-action share-btn">➦</button>
+                    </div>
+                </article>
+
+                </template>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             MURO
+        ========================== -->
+
+        <section
+            class="content-section"
+            id="wall"
+        >
+
+            <div class="wall-header">
+
+                <strong>
+                    Comentarios
+                </strong>
+
+                <span>
+                    ⚙ ☷
+                </span>
+
+            </div>
+
+
+            <div class="write-comment">
+
+                <img
+                    src="img/perfil.jpg"
+                    onerror="this.src='https://i.pinimg.com/736x/0c/67/30/0c673029324220a35d23c2cf67862175.jpg'"
+                >
+
+                <input
+                    id="commentInput"
+                    placeholder="Diga alguna cosa..."
+                >
+
+                <button id="sendComment">
+                    ➤
+                </button>
+
+            </div>
+
+
+            <div
+                class="comments"
+                id="comments"
+            >
+
+                <div class="comment">
+
+                    <img
+                        class="comment-avatar"
+                        src="https://i.pinimg.com/736x/67/26/65/672665ec2782f36bc78df3292ca14674.jpg"
+                    >
+
+                    <div>
+
+                        <strong>
+                            ♡ princesa
+                        </strong>
+
+                        <p>
+                            Me gustó mucho tu perfil ♡
+                        </p>
+
+                        <small>
+                            hoy · Responder
+                        </small>
+
+                    </div>
+
+                    <button>
+                        ♡
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             WIKIS
+        ========================== -->
+
+        <section
+            class="content-section"
+            id="wiki"
+        >
+
+            <div class="wiki-title">
+
+                <span>
+                    Mis Entradas Wiki
+                </span>
+
+                <button>
+                    ›
+                </button>
+
+            </div>
+
+
+            <div class="wiki-container">
+
+
+                <div class="wiki-card new-wiki">
+
+                    <div>
+                        +
+                    </div>
+
+                    <span>
+                        Nueva Wiki
+                    </span>
+
+                </div>
+
+
+                <div class="wiki-card">
+
+                    <img
+                        src="https://i.pinimg.com/736x/e2/cc/08/e2cc080655f4f11de7be16641022f6aa.jpg"
+                    >
+
+                    <span>
+                        ♡ Nuestra historia
+                    </span>
+
+                </div>
+
+
+                <div class="wiki-card">
+
+                    <img
+                        src="https://i.pinimg.com/736x/b1/e1/d1/b1e1d1842f6097bafc27ba60595a7b59.jpg"
+                    >
+
+                    <span>
+                        ✦ Sobre ella
+                    </span>
+
+                </div>
+
+
+                <div class="wiki-card">
+
+                    <img
+                        src="https://i.pinimg.com/736x/e5/b5/83/e5b58356934fe64c47660553f611032c.jpg"
+                    >
+
+                    <span>
+                        ♡ Recuerdos
+                    </span>
+
+                </div>
+
+
+                <div class="wiki-card">
+
+                    <img
+                        src="https://i.pinimg.com/736x/98/36/e9/9836e9e634a1abff4a615666374631cd.jpg"
+                    >
+
+                    <span>
+                        ✧ BTS
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             GUARDADOS
+        ========================== -->
+
+        <section
+            class="content-section"
+            id="saved"
+        >
+
+            <div class="empty">
+
+                <div>
+                    ☆
+                </div>
+
+                <h3>
+                    Publicaciones guardadas
+                </h3>
+
+                <p>
+                    Aquí aparecerán las publicaciones
+                    que guardes.
+                </p>
+
+            </div>
+
+        </section>
+
+    </section>
+
+</div>
+
+
+<!-- =========================
+     MODAL CREAR POST
+========================== -->
+
+<div class="modal editor-modal" id="postModal" aria-hidden="true">
+    <section class="blog-editor-shell" role="dialog" aria-modal="true" aria-labelledby="editorDialogTitle">
+        <header class="blog-editor-header">
+            <button class="editor-icon-button" id="closePostModal" type="button" aria-label="Guardar borrador y volver">←</button>
+            <div class="editor-heading">
+                <strong id="editorDialogTitle">Editor de blog</strong>
+                <small id="draftStatus" role="status" aria-live="polite">Listo para escribir</small>
+            </div>
+            <button class="editor-preview-button" id="previewPost" type="button" aria-pressed="false">Vista previa</button>
+            <button class="editor-publish-button" id="publishPost" type="button">Guardar</button>
+        </header>
+
+        <div class="blog-editor-scroll">
+            <main class="editor-compose-view" id="editorComposeView">
+                <section class="editor-section editor-title-section" aria-labelledby="editorTitleLabel">
+                    <label id="editorTitleLabel" for="newPostTitle">Título del blog</label>
+                    <input type="text" id="newPostTitle" maxlength="120" placeholder="Ponle un título a tu blog" autocomplete="off">
+                </section>
+
+                <section class="editor-section" aria-labelledby="coverPickerTitle">
+                    <div class="editor-section-heading">
+                        <div>
+                            <h3 id="coverPickerTitle">Portada</h3>
+                            <p>Elige una de las portadas que ya preparaste.</p>
+                        </div>
+                    </div>
+                    <div class="cover-picker" id="coverPicker" role="list">
+                        <button class="cover-option" type="button" data-cover="img/portada youarerality.png" aria-label="Usar portada You are my reality"><img src="img/portada youarerality.png" alt="" loading="lazy" decoding="async"></button>
+                        <button class="cover-option" type="button" data-cover="img/portadaserenpidia.png" aria-label="Usar portada My Serendipity"><img src="img/portadaserenpidia.png" alt="" loading="lazy" decoding="async"></button>
+                        <button class="cover-option" type="button" data-cover="img/portada you save me.png" aria-label="Usar portada You save me"><img src="img/portada you save me.png" alt="" loading="lazy" decoding="async"></button>
+                        <button class="cover-option" type="button" data-cover="img/portada my world with you.png" aria-label="Usar portada My world with you"><img src="img/portada my world with you.png" alt="" loading="lazy" decoding="async"></button>
+                        <button class="cover-option" type="button" data-cover="img/portada mrjelous.png" aria-label="Usar portada Mr Jealous"><img src="img/portada mrjelous.png" alt="" loading="lazy" decoding="async"></button>
+                        <button class="cover-option" type="button" data-cover="img/12.png" aria-label="Usar portada Happy Birthday"><img src="img/12.png" alt="" loading="lazy" decoding="async"></button>
+                    </div>
+                </section>
+
+                <section class="editor-section blog-theme-editor" aria-labelledby="blogThemeTitle">
+                    <div class="editor-section-heading">
+                        <div>
+                            <h3 id="blogThemeTitle">Tema del blog</h3>
+                            <p>Usa un estilo listo o cambia cada color.</p>
+                        </div>
+                    </div>
+                    <div class="blog-theme-presets" aria-label="Temas rápidos">
+                        <button type="button" data-blog-theme-preset="black"><span class="theme-preview theme-preview-black"></span>Negro total</button>
+                        <button type="button" data-blog-theme-preset="contrast"><span class="theme-preview theme-preview-contrast"></span>Negro y paneles</button>
+                        <button type="button" data-blog-theme-preset="amino"><span class="theme-preview theme-preview-amino"></span>Amino oscuro</button>
+                    </div>
+                    <div class="blog-color-grid">
+                        <label>Fondo <input type="color" id="blogBackgroundColor" value="#000000"></label>
+                        <label>Bloques <input type="color" id="blogSurfaceColor" value="#000000"></label>
+                        <label>Texto <input type="color" id="blogTextColor" value="#ffffff"></label>
+                        <label>Detalles <input type="color" id="blogAccentColor" value="#d7dce6"></label>
+                    </div>
+                </section>
+
+                <section class="editor-section editor-content-section" aria-labelledby="contentBlocksTitle">
+                    <div class="editor-section-heading">
+                        <div>
+                            <h3 id="contentBlocksTitle">Contenido</h3>
+                            <p>Escribe por partes y acomódalas con las flechas.</p>
+                        </div>
+                        <span class="editor-block-count" id="editorBlockCount">0 bloques</span>
+                    </div>
+                    <div class="editor-blocks" id="editorBlocks"></div>
+                    <div class="add-block-toolbar" aria-label="Agregar contenido">
+                        <button type="button" data-add-block="paragraph"><span>＋</span> Texto</button>
+                        <button type="button" data-add-block="heading"><span>＋</span> Título</button>
+                        <button type="button" data-add-block="quote"><span>＋</span> Cita</button>
+                        <button type="button" data-add-block="divider"><span>＋</span> Separador</button>
+                        <button type="button" id="addBlogImage"><span>＋</span> Imagen</button>
+                        <input type="file" id="blogImageUpload" accept="image/png,image/jpeg,image/webp" multiple hidden>
+                    </div>
+                </section>
+
+                <section class="editor-section banner-library" aria-labelledby="bannerLibraryTitle">
+                    <div class="editor-section-heading">
+                        <div>
+                            <h3 id="bannerLibraryTitle">Banners de Mr Jealous</h3>
+                            <p>Toca uno para añadirlo después del bloque seleccionado; también puedes subirlo o bajarlo.</p>
+                        </div>
+                    </div>
+                    <div class="banner-picker" id="bannerPicker">
+                        <button class="banner-option" type="button" data-banner-src="img/titutlo de mr jealous.png" data-banner-alt="Título decorativo Mr Jealous">
+                            <img src="img/titutlo de mr jealous.png" alt="" loading="lazy" decoding="async"><span>Título</span>
+                        </button>
+                        <button class="banner-option" type="button" data-banner-src="img/banner 2.png" data-banner-alt="Pareja dibujada con un corazón">
+                            <img src="img/banner 2.png" alt="" loading="lazy" decoding="async"><span>Corazón</span>
+                        </button>
+                        <button class="banner-option" type="button" data-banner-src="img/banner 3 mrjealous.png" data-banner-alt="Manos entrelazadas en blanco y negro">
+                            <img src="img/banner 3 mrjealous.png" alt="" loading="lazy" decoding="async"><span>Manos</span>
+                        </button>
+                        <button class="banner-option" type="button" data-banner-src="img/nbanner 4 mr.png" data-banner-alt="Retrato oscuro circular">
+                            <img src="img/nbanner 4 mr.png" alt="" loading="lazy" decoding="async"><span>Retrato</span>
+                        </button>
+                    </div>
+                </section>
+            </main>
+
+            <section class="editor-preview-view" id="editorPreviewView" hidden aria-label="Vista previa del blog">
+                <div class="editor-preview-card">
+                    <h2 id="editorPreviewTitle">Sin título</h2>
+                    <div class="editor-preview-author">
+                        <img src="img/perfil.jpg" alt="">
+                        <div><strong>빛─❝ K a i ;;✦</strong><small>Vista previa</small></div>
+                    </div>
+                    <div class="amino-reader-body editor-preview-body" id="editorPreviewBody"></div>
+                    <div class="amino-reader-cover editor-preview-cover" id="editorPreviewCover"></div>
+                </div>
+            </section>
+        </div>
+    </section>
+</div>
+
+
+<!-- =========================
+     MODAL BIOGRAFÍA (estilo Amino)
+========================== -->
+
+<div class="modal" id="bioModal">
+
+    <div class="modal-bio">
+
+        <!-- header simple -->
+        <div class="bio-modal-header">
+
+            <button class="bio-modal-back" id="closeBioModal">
+                ←
+            </button>
+
+            <span>Biografía + Theme (leer Descripción)</span>
+
+            <button class="bio-edit-btn" id="bioEditBtn">✎ Editar</button>
+
+        </div>
+
+        <!-- solo contenido de la bio -->
+        <div class="bio-modal-body">
+
+            <div class="bio-modal-text">
+                <p class="bio-c">#/° w.elcome..ღ take my hand ♡</p>
+                <p class="bio-c">╭ ── ✦ ── ╮</p>
+                <p class="bio-c">thinking out loud . . .</p>
+                <p class="bio-c">❝ kiss me under the light of a thousand stars ❞</p>
+                <p class="bio-c">╰ ── ♡ ── ╯</p>
+
+                <div class="bio-img-row">
+                    <img src="img/perfil.jpg"
+                        onerror="this.src='https://i.pinimg.com/736x/0c/67/30/0c673029324220a35d23c2cf67862175.jpg'"
+                        alt="">
+                    <img src="img/fondo.jpg"
+                        onerror="this.src='https://i.pinimg.com/736x/e5/b5/83/e5b58356934fe64c47660553f611032c.jpg'"
+                        alt="">
+                    <img src="img/perfil.jpg"
+                        onerror="this.src='https://i.pinimg.com/736x/b1/e1/d1/b1e1d1842f6097bafc27ba60595a7b59.jpg'"
+                        alt="">
+                </div>
+
+                <p class="bio-c">✦ Miembro desde agosto 2026</p>
+                <p class="bio-c">🎵 BTS · EXO · TXT · ENHYPEN</p>
+                <p class="bio-c">♡ Pιιnceѕιтa de Kai ;;✦</p>
+                <p class="bio-c">⌗ No DM sin permiso.</p>
+                <p class="bio-c">⌗ Perfil personal — no roleplay.</p>
+
+                <div class="bio-reactions">
+                    <button class="bio-react">🚩</button>
+                    <button class="bio-react">🚩</button>
+                    <button class="bio-react">🚩</button>
+                    <button class="bio-react">🚩</button>
+                </div>
+
+                <button class="bio-add-line" id="bioAddLine">+ Agregar línea</button>
+
+            </div>
+
+        </div>
+
+        <!-- COMENTARIOS -->
+        <div class="bio-modal-comments">
+
+            <div class="bio-comment-header">
+                <strong>Comentarios</strong>
+                <span>⚙ ☷</span>
+            </div>
+
+            <div class="write-comment bio-write-comment">
+                <img
+                    src="img/perfil.jpg"
+                    onerror="this.src='https://i.pinimg.com/736x/0c/67/30/0c673029324220a35d23c2cf67862175.jpg'"
+                >
+                <input id="bioCommentInput" placeholder="Di algo...">
+                <button id="sendBioComment">➤</button>
+            </div>
+
+            <div class="comments bio-comment-list" id="bioCommentList">
+
+                <div class="comment">
+                    <img class="comment-avatar"
+                        src="https://i.pinimg.com/736x/67/26/65/672665ec2782f36bc78df3292ca14674.jpg"
+                    >
+                    <div>
+                        <strong>♡ princesa</strong>
+                        <p>Me gustó mucho tu perfil ♡</p>
+                        <small>hoy · Responder</small>
+                    </div>
+                    <button>♡</button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     MODAL BLOG (estilo Amino)
+========================== -->
+
+<div class="modal" id="blogModal" aria-hidden="true">
+
+    <div class="modal-blog amino-reader" role="dialog" aria-modal="true" aria-labelledby="blogModalTitle">
+
+        <!-- header tipo Amino -->
+        <div class="blog-modal-header amino-reader-header">
+            <button class="blog-modal-back" id="closeBlogModal" type="button" aria-label="Cerrar blog">←</button>
+            <span id="blogModalCategory">Blog</span>
+            <div class="amino-reader-actions">
+                <button id="blogEditBtn" type="button" aria-label="Editar este blog" title="Editar">✎</button>
+                <button id="blogShareBtn" type="button" aria-label="Compartir este blog" title="Compartir">➦</button>
+            </div>
+        </div>
+
+        <h2 class="blog-modal-title amino-reader-title" id="blogModalTitle"></h2>
+
+        <!-- info del autor -->
+        <div class="blog-modal-author amino-reader-author">
+            <img src="img/perfil.jpg" onerror="this.src='https://i.pinimg.com/736x/0c/67/30/0c673029324220a35d23c2cf67862175.jpg'">
+            <div class="author-details">
+                <strong>빛─❝ K a i ;;✦ <span class="author-lv">LV17</span> <span class="author-badge">Curador</span></strong>
+                <small>hace 13 días</small>
+            </div>
+            <div class="blog-modal-likes">
+                <button id="blogModalLikeBtn" class="blog-like-btn" type="button" aria-label="Me gusta" aria-pressed="false">♡</button>
+                <span id="blogModalLikeCount"></span>
+            </div>
+        </div>
+
+        <!-- contenido del blog -->
+        <div class="blog-modal-body amino-reader-body" id="blogModalBody"></div>
+
+        <!-- portada (ahora abajo o como imagen principal) -->
+        <div class="blog-modal-cover amino-reader-cover" id="blogModalCover"></div>
+
+        <!-- comentarios del blog -->
+        <div class="blog-modal-comments">
+            <div class="blog-comment-header">
+                <strong>Comentarios</strong>
+            </div>
+            <div class="blog-modal-comment-list" id="blogCommentList">
+                <div class="comment">
+                    <img class="comment-avatar"
+                        src="https://i.pinimg.com/736x/67/26/65/672665ec2782f36bc78df3292ca14674.jpg">
+                    <div>
+                        <strong>♡ princesa</strong>
+                        <p>Esto me llegó al corazón 💕</p>
+                        <small>hoy · Responder</small>
+                    </div>
+                    <button>♡</button>
+                </div>
+            </div>
+            <div class="write-comment blog-write-comment">
+                <img
+                    src="img/perfil.jpg"
+                    onerror="this.src='https://i.pinimg.com/736x/0c/67/30/0c673029324220a35d23c2cf67862175.jpg'"
+                >
+                <input id="blogCommentInput" placeholder="Escribe un comentario...">
+                <button id="sendBlogComment">➤</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     BOTÓN FLOTANTE PALETA (NUEVO)
+========================== -->
+
+<button class="theme-fab" id="openThemePanel" title="Cambiar tema de color">
+    🎨
+</button>
+
+
+<!-- =========================
+     PANEL DE TEMA (NUEVO - estilo Amino)
+========================== -->
+
+<div class="theme-overlay" id="themeOverlay"></div>
+
+<div class="theme-panel" id="themePanel">
+
+    <!-- handle para cerrar deslizando -->
+    <div class="theme-handle"></div>
+
+    <div class="theme-panel-header">
+        <button class="theme-close" id="closeThemePanel">✕</button>
+        <h3>Personalizar tema</h3>
+        <span></span>
+    </div>
+
+    <p class="theme-subtitle">Color de acento</p>
+    <div class="theme-swatches" id="themeSwatches">
+        <button class="swatch" data-color="#7B5EA7" style="background:#7B5EA7" title="Amino Morado"></button>
+        <button class="swatch" data-color="#E91E63" style="background:#E91E63" title="Rosa"></button>
+        <button class="swatch" data-color="#F06292" style="background:#F06292" title="Rosa claro"></button>
+        <button class="swatch" data-color="#18c67e" style="background:#18c67e" title="Verde Amino"></button>
+        <button class="swatch" data-color="#2196F3" style="background:#2196F3" title="Azul"></button>
+        <button class="swatch" data-color="#00BCD4" style="background:#00BCD4" title="Cyan"></button>
+        <button class="swatch" data-color="#FF9800" style="background:#FF9800" title="Naranja"></button>
+        <button class="swatch" data-color="#FF5722" style="background:#FF5722" title="Naranja oscuro"></button>
+        <button class="swatch" data-color="#F44336" style="background:#F44336" title="Rojo"></button>
+        <button class="swatch" data-color="#9C27B0" style="background:#9C27B0" title="Morado"></button>
+        <button class="swatch" data-color="#3F51B5" style="background:#3F51B5" title="Índigo"></button>
+        <button class="swatch" data-color="#607D8B" style="background:#607D8B" title="Gris azulado"></button>
+        <button class="swatch" data-color="#795548" style="background:#795548" title="Café"></button>
+        <button class="swatch" data-color="#FFC107" style="background:#FFC107" title="Amarillo"></button>
+        <button class="swatch" data-color="#4CAF50" style="background:#4CAF50" title="Verde"></button>
+        <button class="swatch swatch-custom" id="swatchCustom" title="Color personalizado">
+            <span>+</span>
+            <input type="color" id="customColorPicker" value="#7B5EA7">
+        </button>
+    </div>
+
+    <p class="theme-subtitle">Fondo de la app</p>
+    <div class="theme-bg-options" id="themeBgOptions">
+        <button class="bg-opt active" data-bg="#eeeeec" style="background:#eeeeec" title="Gris claro (default)"></button>
+        <button class="bg-opt" data-bg="#ffffff" style="background:#ffffff" title="Blanco"></button>
+        <button class="bg-opt" data-bg="#1a1a2e" style="background:#1a1a2e" title="Azul noche"></button>
+        <button class="bg-opt" data-bg="#0d0d0d" style="background:#0d0d0d" title="Negro"></button>
+        <button class="bg-opt" data-bg="#1e1e2e" style="background:#1e1e2e" title="Oscuro suave"></button>
+        <button class="bg-opt" data-bg="#2d1b33" style="background:#2d1b33" title="Morado noche"></button>
+        <button class="bg-opt" data-bg="#1a2a1a" style="background:#1a2a1a" title="Verde noche"></button>
+        <button class="bg-opt" data-bg="#2a1a1a" style="background:#2a1a1a" title="Rojo noche"></button>
+    </div>
+
+    <p class="theme-subtitle">Presets completos</p>
+    <div class="theme-presets">
+        <button class="preset-btn" data-accent="#7B5EA7" data-bg="#eeeeec">
+            <span style="background:#7B5EA7"></span>
+            Amino
+        </button>
+        <button class="preset-btn" data-accent="#E91E63" data-bg="#2d1b33">
+            <span style="background:#E91E63"></span>
+            Rosa Noche
+        </button>
+        <button class="preset-btn" data-accent="#18c67e" data-bg="#0d1a12">
+            <span style="background:#18c67e"></span>
+            Matrix
+        </button>
+        <button class="preset-btn" data-accent="#2196F3" data-bg="#0d1a2e">
+            <span style="background:#2196F3"></span>
+            Océano
+        </button>
+        <button class="preset-btn" data-accent="#FF9800" data-bg="#1a120d">
+            <span style="background:#FF9800"></span>
+            Fuego
+        </button>
+        <button class="preset-btn" data-accent="#F06292" data-bg="#ffffff">
+            <span style="background:#F06292"></span>
+            Rosa Día
+        </button>
+    </div>
+
+    <button class="theme-reset" id="themeReset">↺ Restaurar predeterminado</button>
+
+</div>
+
+
+<script src="script.js"></script>
+<script src="blog-editor.js"></script>
+
+</body>
+</html>
