@@ -102,6 +102,140 @@
         else blog.blocks.push(imageBlock);
     }
 
+    function clampChannel(value) {
+        return Math.max(0, Math.min(255, Math.round(value)));
+    }
+
+    function rgbToHex(rgb) {
+        return "#" + [rgb.r, rgb.g, rgb.b].map(function (value) {
+            return clampChannel(value).toString(16).padStart(2, "0");
+        }).join("");
+    }
+
+    function mixRgb(source, target, amount) {
+        return {
+            r: source.r + (target.r - source.r) * amount,
+            g: source.g + (target.g - source.g) * amount,
+            b: source.b + (target.b - source.b) * amount
+        };
+    }
+
+    function colorLuminance(rgb) {
+        return (rgb.r * 0.2126) + (rgb.g * 0.7152) + (rgb.b * 0.0722);
+    }
+
+    function sampleImageColor(src) {
+        return new Promise(function (resolve) {
+            const image = new Image();
+
+            image.onload = function () {
+                try {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = 42;
+                    canvas.height = 42;
+                    const context = canvas.getContext("2d", { willReadFrequently: true });
+                    if (!context) {
+                        resolve(null);
+                        return;
+                    }
+
+                    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+                    const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+                    let red = 0;
+                    let green = 0;
+                    let blue = 0;
+                    let weightTotal = 0;
+
+                    for (let index = 0; index < pixels.length; index += 4) {
+                        const alpha = pixels[index + 3];
+                        if (alpha < 90) continue;
+
+                        const r = pixels[index];
+                        const g = pixels[index + 1];
+                        const b = pixels[index + 2];
+                        const max = Math.max(r, g, b);
+                        const min = Math.min(r, g, b);
+                        const brightness = (r + g + b) / 3;
+
+                        if (brightness < 6 || brightness > 250) continue;
+
+                        const chroma = max - min;
+                        const weight = 0.25 + Math.min(3, chroma / 55);
+                        red += r * weight;
+                        green += g * weight;
+                        blue += b * weight;
+                        weightTotal += weight;
+                    }
+
+                    if (!weightTotal) {
+                        resolve(null);
+                        return;
+                    }
+
+                    resolve({
+                        r: red / weightTotal,
+                        g: green / weightTotal,
+                        b: blue / weightTotal,
+                        weight: weightTotal
+                    });
+                } catch (error) {
+                    resolve(null);
+                }
+            };
+
+            image.onerror = function () {
+                resolve(null);
+            };
+
+            image.src = src;
+        });
+    }
+
+    async function makeThemeFromImages(paths) {
+        const samples = await Promise.all(paths.map(sampleImageColor));
+        let red = 0;
+        let green = 0;
+        let blue = 0;
+        let total = 0;
+
+        samples.forEach(function (sample) {
+            if (!sample) return;
+            const weight = Math.max(1, sample.weight);
+            red += sample.r * weight;
+            green += sample.g * weight;
+            blue += sample.b * weight;
+            total += weight;
+        });
+
+        if (!total) return null;
+
+        const base = {
+            r: red / total,
+            g: green / total,
+            b: blue / total
+        };
+
+        const dark = { r: 0, g: 0, b: 0 };
+        const light = { r: 255, g: 255, b: 255 };
+        const accentLighten = colorLuminance(base) < 90 ? 0.42 : 0.16;
+
+        return {
+            background: rgbToHex(mixRgb(base, dark, 0.70)),
+            surface: rgbToHex(mixRgb(base, dark, 0.50)),
+            text: "#fffafc",
+            accent: rgbToHex(mixRgb(base, light, accentLighten))
+        };
+    }
+
+    function applyThemeVariables(theme) {
+        document.querySelectorAll('[data-blog-id="you-save-me"]').forEach(function (element) {
+            element.style.setProperty("--blog-bg", theme.background);
+            element.style.setProperty("--blog-surface", theme.surface);
+            element.style.setProperty("--blog-text", theme.text);
+            element.style.setProperty("--blog-accent", theme.accent);
+        });
+    }
+
     window.addEventListener("load", async function () {
         const realityBlog = findBlog("you-are-my-reality");
 
@@ -155,11 +289,9 @@
             }
         }
 
-        // Banners que subiste para el blog You Save Me.
-        // Se reparten entre las partes de la historia para que no queden todos juntos.
         const saveMeBlog = findBlog("you-save-me");
         if (saveMeBlog && Array.isArray(saveMeBlog.blocks)) {
-            [
+            const saveMeBanners = [
                 {
                     id: "save-me-banner-1",
                     src: "img/banner1 saveme.png",
@@ -190,9 +322,27 @@
                     alt: "Banner 5 de You Save Me",
                     after: "Me salvaste de la idea de que debía salvarme a solas"
                 }
-            ].forEach(function (banner) {
+            ];
+
+            saveMeBanners.forEach(function (banner) {
                 insertImageAfterText(saveMeBlog, banner);
             });
+
+            const theme = await makeThemeFromImages(saveMeBanners.map(function (banner) {
+                return banner.src;
+            }));
+
+            if (theme) {
+                saveMeBlog.theme = theme;
+
+                const currentOverrides = readOverrides();
+                currentOverrides["you-save-me"] = Object.assign({}, currentOverrides["you-save-me"] || {}, {
+                    theme: theme,
+                    contentVersion: 1
+                });
+                saveOverrides(currentOverrides);
+                applyThemeVariables(theme);
+            }
         }
     });
 
