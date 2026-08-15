@@ -2,14 +2,14 @@
     "use strict";
 
     // Colores exactos de la captura del editor de "You Are My Reality".
-    const YOU_ARE_MY_REALITY_THEME = {
+    const RED_THEME = {
         background: "#ff0006",
         surface: "#fe0104",
         text: "#fff4f4",
         accent: "#d94962"
     };
 
-    // Restauramos Happy Birthday al tema rosa/morado que tenía originalmente.
+    // Happy Birthday conserva su tema rosa/morado original.
     const HAPPY_BIRTHDAY_THEME = {
         background: "#170713",
         surface: "#291022",
@@ -42,19 +42,27 @@
 
     const overrides = readOverrides();
 
-    // Forzamos únicamente el tema de You Are My Reality sin tocar sus textos,
-    // imágenes, portada ni formato guardado.
+    // You Are My Reality: rojo de la captura.
     overrides["you-are-my-reality"] = Object.assign(
         {},
         overrides["you-are-my-reality"] || {},
         {
-            theme: YOU_ARE_MY_REALITY_THEME,
+            theme: RED_THEME,
             contentVersion: 2
         }
     );
 
-    // Corrige el cambio anterior que había puesto este rojo por error
-    // en Happy Birthday, conservando cualquier otro contenido editado.
+    // My World With You: mismo rojo de la captura, sin tocar contenido ni formato.
+    overrides["my-world-with-you"] = Object.assign(
+        {},
+        overrides["my-world-with-you"] || {},
+        {
+            theme: RED_THEME,
+            contentVersion: 2
+        }
+    );
+
+    // Happy Birthday se mantiene con su tema original.
     overrides["happy-birthday-my-love"] = Object.assign(
         {},
         overrides["happy-birthday-my-love"] || {},
