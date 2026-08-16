@@ -1,19 +1,64 @@
 /* Decoracion exclusiva para Happy Birthday My Love.
-   SOLO modifica titulos, separadores y citas.
-   No toca banners, imagenes, parrafos, contenido ni colores guardados. */
+   SOLO modifica elementos decorativos del blog.
+   No toca banners, imagenes, contenido ni colores guardados. */
+
+/* ===== AMBIENTE MAGICO TIPO SAKURA ===== */
+[data-blog-variant="birthday-card"] .amino-reader-body {
+    position: relative !important;
+    overflow: hidden !important;
+    isolation: isolate;
+}
+
+[data-blog-variant="birthday-card"] .amino-reader-body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 8% 7%, rgba(255,255,255,.16) 0 1.8px, transparent 2.6px),
+        radial-gradient(circle at 88% 11%, rgba(255,190,220,.15) 0 2.4px, transparent 3.2px),
+        radial-gradient(circle at 14% 29%, rgba(255,255,255,.10) 0 1.6px, transparent 2.4px),
+        radial-gradient(circle at 91% 38%, rgba(255,190,220,.14) 0 2.5px, transparent 3.3px),
+        radial-gradient(circle at 7% 60%, rgba(255,255,255,.10) 0 1.7px, transparent 2.5px),
+        radial-gradient(circle at 87% 72%, rgba(255,190,220,.13) 0 2.4px, transparent 3.2px),
+        radial-gradient(circle at 18% 89%, rgba(255,255,255,.10) 0 1.7px, transparent 2.5px);
+    opacity: .9;
+}
+
+[data-blog-variant="birthday-card"] .amino-reader-body::after {
+    content: "☾   ✦   ❀   ୨ৎ   ❀   ✦   ☽";
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    z-index: 1;
+    transform: translateX(-50%);
+    pointer-events: none;
+    color: color-mix(in srgb, var(--blog-accent) 82%, #ffd8ea 18%);
+    font-size: 11px;
+    letter-spacing: .24em;
+    white-space: nowrap;
+    text-shadow: 0 0 9px color-mix(in srgb, var(--blog-accent) 36%, transparent);
+    opacity: .9;
+}
+
+[data-blog-variant="birthday-card"] .amino-reader-body > * {
+    position: relative;
+    z-index: 2;
+}
 
 /* ===== TITULOS ===== */
 [data-blog-variant="birthday-card"] .amino-content-heading {
     position: relative !important;
     width: min(92%, 430px) !important;
-    margin: 58px auto 34px !important;
-    padding: 28px 18px 24px !important;
+    margin: 62px auto 36px !important;
+    padding: 30px 18px 25px !important;
     border: 0 !important;
     border-top: 1px solid color-mix(in srgb, var(--blog-accent) 88%, white 12%) !important;
     border-bottom: 1px solid color-mix(in srgb, var(--blog-accent) 88%, white 12%) !important;
     border-radius: 0 !important;
     background:
-        linear-gradient(90deg, transparent, color-mix(in srgb, var(--blog-accent) 10%, transparent), transparent) !important;
+        linear-gradient(90deg, transparent, color-mix(in srgb, var(--blog-accent) 11%, transparent), transparent) !important;
     box-shadow: none !important;
     color: var(--blog-text) !important;
     font-family: Georgia, "Times New Roman", serif !important;
@@ -26,40 +71,45 @@
     text-underline-offset: 6px !important;
     white-space: pre-line !important;
     text-wrap: balance !important;
+    text-shadow:
+        0 0 10px color-mix(in srgb, var(--blog-accent) 24%, transparent),
+        0 0 18px color-mix(in srgb, var(--blog-accent) 12%, transparent);
 }
 
 [data-blog-variant="birthday-card"] .amino-content-heading::before {
-    content: "╭──────  ♡  ✦  ♡  ──────╮" !important;
+    content: "✦  ❀  ୨ৎ  ♡  ୨ৎ  ❀  ✦" !important;
     display: block !important;
     width: max-content !important;
     max-width: 96% !important;
-    margin: -39px auto 18px !important;
+    margin: -41px auto 18px !important;
     padding: 0 12px !important;
     background: var(--blog-bg) !important;
-    color: var(--blog-accent) !important;
+    color: #ffbfdc !important;
     font-family: Arial, sans-serif !important;
-    font-size: 11px !important;
+    font-size: 12px !important;
     font-weight: 400 !important;
     line-height: 1 !important;
-    letter-spacing: 0.06em !important;
+    letter-spacing: 0.10em !important;
     white-space: nowrap !important;
+    text-shadow: 0 0 8px rgba(255, 186, 224, .28) !important;
 }
 
 [data-blog-variant="birthday-card"] .amino-content-heading::after {
-    content: "╰──────  ୨ৎ  ──────╯" !important;
+    content: "⋆  ˚｡⋆୨♡୧⋆｡˚  ⋆" !important;
     display: block !important;
     width: max-content !important;
     max-width: 96% !important;
-    margin: 18px auto -35px !important;
+    margin: 19px auto -36px !important;
     padding: 0 12px !important;
     background: var(--blog-bg) !important;
-    color: var(--blog-accent) !important;
+    color: #ffbfdc !important;
     font-family: Arial, sans-serif !important;
     font-size: 11px !important;
     font-weight: 400 !important;
     line-height: 1 !important;
-    letter-spacing: 0.08em !important;
+    letter-spacing: 0.10em !important;
     white-space: nowrap !important;
+    text-shadow: 0 0 8px rgba(255, 186, 224, .28) !important;
 }
 
 /* ===== SEPARADORES ===== */
@@ -69,7 +119,7 @@
     align-items: center !important;
     gap: 13px !important;
     width: min(90%, 420px) !important;
-    margin: 60px auto !important;
+    margin: 62px auto !important;
     padding: 0 !important;
     border: 0 !important;
     background: transparent !important;
@@ -92,67 +142,109 @@
 [data-blog-variant="birthday-card"] .amino-content-divider span {
     display: inline-grid !important;
     place-items: center !important;
-    min-width: 82px !important;
+    min-width: 104px !important;
     font-size: 0 !important;
 }
 
 [data-blog-variant="birthday-card"] .amino-content-divider span::before {
-    content: "✦  ♡  ✦" !important;
+    content: "❀  ✦  ♡  ✦  ❀" !important;
     display: block !important;
-    color: var(--blog-accent) !important;
+    color: #ffbfdc !important;
     font-size: 14px !important;
     line-height: 1 !important;
-    letter-spacing: 0.22em !important;
-    text-shadow: 0 0 8px color-mix(in srgb, var(--blog-accent) 35%, transparent) !important;
+    letter-spacing: 0.18em !important;
+    text-shadow: 0 0 8px rgba(255, 186, 224, .28) !important;
 }
 
 /* ===== CITAS ===== */
 [data-blog-variant="birthday-card"] .amino-content-quote {
     position: relative !important;
     width: min(88%, 390px) !important;
-    margin: 54px auto !important;
-    padding: 32px 24px 29px !important;
-    border: 1px solid color-mix(in srgb, var(--blog-accent) 75%, transparent) !important;
+    margin: 56px auto !important;
+    padding: 34px 24px 31px !important;
+    border: 1px solid rgba(255, 190, 223, .48) !important;
     border-radius: 3px !important;
     background: color-mix(in srgb, var(--blog-surface) 88%, transparent) !important;
     box-shadow:
-        inset 0 0 0 5px color-mix(in srgb, var(--blog-accent) 7%, transparent),
+        inset 0 0 0 5px rgba(255, 190, 223, .07),
+        0 0 24px rgba(255, 190, 223, .08),
         0 8px 24px rgba(0, 0, 0, 0.12) !important;
 }
 
 [data-blog-variant="birthday-card"] .amino-content-quote::before {
-    content: "୨ৎ  ♡  ୨ৎ" !important;
+    content: "❀  ♡  ✧  SAKURA  ✧  ♡  ❀" !important;
     display: block !important;
     width: max-content !important;
-    margin: -42px auto 20px !important;
+    margin: -45px auto 20px !important;
     padding: 0 12px !important;
     background: var(--blog-bg) !important;
-    color: var(--blog-accent) !important;
-    font-size: 13px !important;
+    color: #ffbfdc !important;
+    font-size: 11px !important;
     line-height: 1 !important;
-    letter-spacing: 0.18em !important;
+    letter-spacing: 0.12em !important;
     text-align: center !important;
+    text-shadow: 0 0 8px rgba(255, 186, 224, .26) !important;
 }
 
 [data-blog-variant="birthday-card"] .amino-content-quote::after {
-    content: "───  ✧  ───  ♡  ───  ✧  ───" !important;
+    content: "୨ৎ  ⋆  ❀  ⋆  ୨ৎ" !important;
     display: block !important;
     margin-top: 20px !important;
-    overflow: hidden !important;
-    color: var(--blog-accent) !important;
-    font-size: 9px !important;
+    color: #ffbfdc !important;
+    font-size: 11px !important;
     line-height: 1 !important;
-    letter-spacing: 0.05em !important;
+    letter-spacing: 0.18em !important;
     text-align: center !important;
     white-space: nowrap !important;
+    text-shadow: 0 0 8px rgba(255, 186, 224, .24) !important;
+}
+
+/* ===== FRASES CENTRADAS / INDICE ===== */
+[data-blog-variant="birthday-card"] .amino-content-paragraph.amino-align-center {
+    position: relative;
+}
+
+[data-blog-variant="birthday-card"] .amino-content-paragraph.amino-align-center::before {
+    content: "✿";
+    display: block;
+    margin: 0 auto 10px;
+    color: #ffbfdc;
+    font-size: 14px;
+    line-height: 1;
+    text-align: center;
+    text-shadow: 0 0 8px rgba(255, 186, 224, .26);
+}
+
+[data-blog-variant="birthday-card"] .amino-content-paragraph.amino-align-center::after {
+    content: "✦  ♡  ✦";
+    display: block;
+    margin: 11px auto 0;
+    color: #ffbfdc;
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: .18em;
+    text-align: center;
+    text-shadow: 0 0 8px rgba(255, 186, 224, .24);
+}
+
+/* Detalles de esquina que recuerdan una carta magica, sin tocar imagenes. */
+[data-blog-variant="birthday-card"] .amino-content-heading:nth-of-type(odd) {
+    background-image:
+        radial-gradient(circle at 3% 50%, rgba(255,191,220,.22) 0 2px, transparent 3px),
+        radial-gradient(circle at 97% 50%, rgba(255,191,220,.22) 0 2px, transparent 3px) !important;
 }
 
 /* Intencionalmente NO hay reglas para .amino-content-banner ni img. */
 
 @media (max-width: 520px) {
+    [data-blog-variant="birthday-card"] .amino-reader-body::after {
+        font-size: 9px;
+        letter-spacing: .16em;
+    }
+
     [data-blog-variant="birthday-card"] .amino-content-heading {
         width: 93% !important;
-        margin-block: 54px 32px !important;
+        margin-block: 58px 34px !important;
         padding-inline: 10px !important;
         font-size: 18px !important;
     }
@@ -164,11 +256,16 @@
 
     [data-blog-variant="birthday-card"] .amino-content-divider {
         width: 91% !important;
-        margin-block: 54px !important;
+        margin-block: 56px !important;
     }
 
     [data-blog-variant="birthday-card"] .amino-content-quote {
         width: 91% !important;
         padding-inline: 20px !important;
+    }
+
+    [data-blog-variant="birthday-card"] .amino-content-quote::before {
+        font-size: 9px !important;
+        letter-spacing: .08em !important;
     }
 }
