@@ -84,6 +84,13 @@ jobs:
             sed -i '/<script src="happy-birthday-text-patch.js?v=1"><\/script>/a\<script src="relationship-promise-patch.js?v=1"><\/script>' "${site_path}/index.html"
           fi
 
+      - name: Cargar avatar de princesa en comentario y fichas
+        run: |
+          if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/princesa-avatar-patch.js" ]; then
+            sed -i '/princesa-avatar-patch.js/d' "${site_path}/index.html"
+            sed -i '/<script src="relationship-promise-patch.js?v=1"><\/script>/a\<script src="princesa-avatar-patch.js?v=1"><\/script>' "${site_path}/index.html"
+          fi
+
       - name: Subir sitio
         uses: actions/upload-pages-artifact@v3
         with:
