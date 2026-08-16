@@ -59,7 +59,7 @@ jobs:
         run: |
           if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/my-world-decoration.css" ]; then
             sed -i '/my-world-decoration.css/d' "${site_path}/index.html"
-            sed -i '/<\/head>/i\    <link rel="stylesheet" href="my-world-decoration.css?v=1">' "${site_path}/index.html"
+            sed -i '/<\/head>/i\    <link rel="stylesheet" href="my-world-decoration.css?v=2">' "${site_path}/index.html"
           fi
 
       - name: Activar guardado en la nube
