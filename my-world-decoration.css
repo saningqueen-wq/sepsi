@@ -194,6 +194,36 @@
 
 /* Intencionalmente no hay reglas para banners ni imagenes. */
 
+/* ===== CELULAR: EL LECTOR OCUPA TODA LA PANTALLA =====
+   El lector general tenia un maximo de 470px. En telefonos/pantallas angostas
+   My World ahora usa el ancho completo sin agrandar banners ni imagenes internas. */
+@media (max-width: 900px) {
+    .modal-blog.amino-reader[data-blog-variant="constellation"] {
+        width: 100vw !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+    }
+
+    .modal-blog.amino-reader[data-blog-variant="constellation"] .amino-reader-header,
+    .modal-blog.amino-reader[data-blog-variant="constellation"] .amino-reader-author,
+    .modal-blog.amino-reader[data-blog-variant="constellation"] .amino-reader-cover,
+    .modal-blog.amino-reader[data-blog-variant="constellation"] .amino-reader-body,
+    .modal-blog.amino-reader[data-blog-variant="constellation"] .blog-modal-comments {
+        width: 100% !important;
+        max-width: none !important;
+        box-sizing: border-box !important;
+    }
+
+    .modal-blog.amino-reader[data-blog-variant="constellation"] .amino-reader-body {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+}
+
 @media (max-width: 520px) {
     [data-blog-variant="constellation"] .amino-content-heading {
         width: 92% !important;
