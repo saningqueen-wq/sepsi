@@ -51,9 +51,8 @@ jobs:
       - name: Cargar decoracion de Happy Birthday
         run: |
           if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/happy-birthday-decoration.css" ]; then
-            if ! grep -q 'happy-birthday-decoration.css' "${site_path}/index.html"; then
-              sed -i '/<\/head>/i\    <link rel="stylesheet" href="happy-birthday-decoration.css?v=4">' "${site_path}/index.html"
-            fi
+            sed -i '/happy-birthday-decoration.css/d' "${site_path}/index.html"
+            sed -i '/<\/head>/i\    <link rel="stylesheet" href="happy-birthday-decoration.css?v=5">' "${site_path}/index.html"
           fi
 
       - name: Activar guardado en la nube
