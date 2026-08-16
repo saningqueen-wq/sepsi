@@ -69,6 +69,13 @@ jobs:
             sed -i '/<\/head>/i\    <link rel="stylesheet" href="my-serendipity-decoration.css?v=1">' "${site_path}/index.html"
           fi
 
+      - name: Ocultar banderas de la biografia
+        run: |
+          if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/hide-bio-reactions.css" ]; then
+            sed -i '/hide-bio-reactions.css/d' "${site_path}/index.html"
+            sed -i '/<\/head>/i\    <link rel="stylesheet" href="hide-bio-reactions.css?v=1">' "${site_path}/index.html"
+          fi
+
       - name: Activar guardado en la nube
         run: |
           if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/cloud-sync.js" ]; then
