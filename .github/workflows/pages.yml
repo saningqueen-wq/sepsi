@@ -62,6 +62,13 @@ jobs:
             sed -i '/<\/head>/i\    <link rel="stylesheet" href="my-world-decoration.css?v=3">' "${site_path}/index.html"
           fi
 
+      - name: Cargar titulos centrados de My Serendipity
+        run: |
+          if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/my-serendipity-decoration.css" ]; then
+            sed -i '/my-serendipity-decoration.css/d' "${site_path}/index.html"
+            sed -i '/<\/head>/i\    <link rel="stylesheet" href="my-serendipity-decoration.css?v=1">' "${site_path}/index.html"
+          fi
+
       - name: Activar guardado en la nube
         run: |
           if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/cloud-sync.js" ]; then
