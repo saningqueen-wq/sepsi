@@ -112,6 +112,13 @@ jobs:
             sed -i '/<script src="princesa-avatar-patch.js?v=3"><\/script>/a\<script src="serendipity-justify-patch.js?v=1"><\/script>' "${site_path}/index.html"
           fi
 
+      - name: Cargar historia de la tormenta en You Save Me
+        run: |
+          if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/save-me-storm-patch.js" ]; then
+            sed -i '/save-me-storm-patch.js/d' "${site_path}/index.html"
+            sed -i '/<script src="serendipity-justify-patch.js?v=1"><\/script>/a\<script src="save-me-storm-patch.js?v=1"><\/script>' "${site_path}/index.html"
+          fi
+
       - name: Subir sitio
         uses: actions/upload-pages-artifact@v3
         with:
