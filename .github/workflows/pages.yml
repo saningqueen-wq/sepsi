@@ -77,6 +77,13 @@ jobs:
             sed -i '/<script src="blog-editor.js"><\/script>/a\<script src="happy-birthday-text-patch.js?v=1"><\/script>' "${site_path}/index.html"
           fi
 
+      - name: Cargar promesa y referencia entre blogs
+        run: |
+          if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/relationship-promise-patch.js" ]; then
+            sed -i '/relationship-promise-patch.js/d' "${site_path}/index.html"
+            sed -i '/<script src="happy-birthday-text-patch.js?v=1"><\/script>/a\<script src="relationship-promise-patch.js?v=1"><\/script>' "${site_path}/index.html"
+          fi
+
       - name: Subir sitio
         uses: actions/upload-pages-artifact@v3
         with:
