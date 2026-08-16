@@ -1,0 +1,49 @@
+/* Ajuste exclusivo para My Serendipity.
+   Hace los titulos de seccion mas pequenos, centrados y limpios.
+   No modifica banners, imagenes ni textos. */
+
+[data-blog-variant="timeline"] .amino-content-heading {
+    position: relative !important;
+    width: min(74%, 285px) !important;
+    margin: 42px auto 26px !important;
+    padding: 12px 18px 13px !important;
+    border: 1px solid color-mix(in srgb, var(--blog-accent) 48%, transparent) !important;
+    border-radius: 18px !important;
+    background: color-mix(in srgb, var(--blog-surface) 91%, var(--blog-bg)) !important;
+    box-shadow: 0 7px 17px rgba(0, 0, 0, .09) !important;
+    color: var(--blog-text) !important;
+    font-size: clamp(14px, 3.8vw, 16px) !important;
+    line-height: 1.35 !important;
+    letter-spacing: .045em !important;
+    text-align: center !important;
+    text-wrap: balance !important;
+}
+
+/* Convierte el punto grande lateral en un detalle pequeno centrado. */
+[data-blog-variant="timeline"] .amino-content-heading::before {
+    top: -5px !important;
+    left: 50% !important;
+    width: 8px !important;
+    height: 8px !important;
+    border: 2px solid var(--blog-bg) !important;
+    background: var(--blog-accent) !important;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--blog-accent) 75%, transparent) !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+/* El numero y el titulo mantienen el centro aunque el bloque tenga formato. */
+[data-blog-variant="timeline"] .amino-content-heading,
+[data-blog-variant="timeline"] .amino-content-heading * {
+    text-align: center !important;
+}
+
+@media (max-width: 520px) {
+    [data-blog-variant="timeline"] .amino-content-heading {
+        width: min(76%, 270px) !important;
+        margin: 36px auto 24px !important;
+        padding: 10px 14px 11px !important;
+        border-radius: 15px !important;
+        font-size: 14px !important;
+        line-height: 1.32 !important;
+    }
+}
