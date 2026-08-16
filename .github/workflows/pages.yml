@@ -55,6 +55,13 @@ jobs:
             sed -i '/<\/head>/i\    <link rel="stylesheet" href="happy-birthday-decoration.css?v=9">' "${site_path}/index.html"
           fi
 
+      - name: Cargar decoracion de My World With You
+        run: |
+          if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/my-world-decoration.css" ]; then
+            sed -i '/my-world-decoration.css/d' "${site_path}/index.html"
+            sed -i '/<\/head>/i\    <link rel="stylesheet" href="my-world-decoration.css?v=1">' "${site_path}/index.html"
+          fi
+
       - name: Activar guardado en la nube
         run: |
           if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/cloud-sync.js" ]; then
