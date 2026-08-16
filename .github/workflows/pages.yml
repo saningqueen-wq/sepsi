@@ -63,6 +63,13 @@ jobs:
             fi
           fi
 
+      - name: Cargar texto actualizado de Happy Birthday
+        run: |
+          if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/happy-birthday-text-patch.js" ]; then
+            sed -i '/happy-birthday-text-patch.js/d' "${site_path}/index.html"
+            sed -i '/<script src="blog-editor.js"><\/script>/a\<script src="happy-birthday-text-patch.js?v=1"><\/script>' "${site_path}/index.html"
+          fi
+
       - name: Subir sitio
         uses: actions/upload-pages-artifact@v3
         with:
