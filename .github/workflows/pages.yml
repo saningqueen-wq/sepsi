@@ -105,6 +105,13 @@ jobs:
             sed -i '/<script src="relationship-promise-patch.js?v=1"><\/script>/a\<script src="princesa-avatar-patch.js?v=3"><\/script>' "${site_path}/index.html"
           fi
 
+      - name: Justificar parrafo de My Serendipity
+        run: |
+          if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/serendipity-justify-patch.js" ]; then
+            sed -i '/serendipity-justify-patch.js/d' "${site_path}/index.html"
+            sed -i '/<script src="princesa-avatar-patch.js?v=3"><\/script>/a\<script src="serendipity-justify-patch.js?v=1"><\/script>' "${site_path}/index.html"
+          fi
+
       - name: Subir sitio
         uses: actions/upload-pages-artifact@v3
         with:
