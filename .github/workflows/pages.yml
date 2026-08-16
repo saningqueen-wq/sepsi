@@ -119,6 +119,13 @@ jobs:
             sed -i '/<script src="serendipity-justify-patch.js?v=1"><\/script>/a\<script src="save-me-storm-patch.js?v=1"><\/script>' "${site_path}/index.html"
           fi
 
+      - name: Cargar correccion de Mr Jealous
+        run: |
+          if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/mr-jealous-text-patch.js" ]; then
+            sed -i '/mr-jealous-text-patch.js/d' "${site_path}/index.html"
+            sed -i '/<script src="save-me-storm-patch.js?v=1"><\/script>/a\<script src="mr-jealous-text-patch.js?v=1"><\/script>' "${site_path}/index.html"
+          fi
+
       - name: Subir sitio
         uses: actions/upload-pages-artifact@v3
         with:
