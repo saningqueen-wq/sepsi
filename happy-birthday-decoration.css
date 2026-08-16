@@ -3,13 +3,15 @@
    No toca banners, imagenes, contenido ni colores guardados. */
 
 [data-blog-variant="birthday-card"] {
-    --sakura-pink: #ff78c8;
-    --sakura-light: #ffe8f5;
-    --sakura-gold: #ffd66b;
-    --sakura-glow: rgba(255, 120, 200, .58);
+    --sakura-black: #050505;
+    --sakura-deep: #111111;
+    --sakura-charcoal: #242424;
+    --sakura-gray: #8b8b8b;
+    --sakura-silver: #d8d8d8;
+    --sakura-glow: rgba(255,255,255,.18);
 }
 
-/* ===== AMBIENTE MAGICO TIPO SAKURA ===== */
+/* ===== AMBIENTE MAGICO NEGRO ===== */
 [data-blog-variant="birthday-card"] .amino-reader-body {
     position: relative !important;
     overflow: hidden !important;
@@ -23,13 +25,13 @@
     z-index: 0;
     pointer-events: none;
     background:
-        radial-gradient(circle at 8% 7%, rgba(255,232,245,.34) 0 2px, transparent 3px),
-        radial-gradient(circle at 88% 11%, rgba(255,120,200,.30) 0 2.8px, transparent 4px),
-        radial-gradient(circle at 14% 29%, rgba(255,214,107,.22) 0 2px, transparent 3px),
-        radial-gradient(circle at 91% 38%, rgba(255,120,200,.28) 0 2.8px, transparent 4px),
-        radial-gradient(circle at 7% 60%, rgba(255,232,245,.28) 0 2px, transparent 3px),
-        radial-gradient(circle at 87% 72%, rgba(255,214,107,.20) 0 2.6px, transparent 3.8px),
-        radial-gradient(circle at 18% 89%, rgba(255,120,200,.24) 0 2px, transparent 3px);
+        radial-gradient(circle at 8% 7%, rgba(255,255,255,.18) 0 2px, transparent 3px),
+        radial-gradient(circle at 88% 11%, rgba(0,0,0,.72) 0 3px, transparent 4px),
+        radial-gradient(circle at 14% 29%, rgba(180,180,180,.18) 0 2px, transparent 3px),
+        radial-gradient(circle at 91% 38%, rgba(0,0,0,.68) 0 3px, transparent 4px),
+        radial-gradient(circle at 7% 60%, rgba(255,255,255,.12) 0 2px, transparent 3px),
+        radial-gradient(circle at 87% 72%, rgba(110,110,110,.22) 0 3px, transparent 4px),
+        radial-gradient(circle at 18% 89%, rgba(0,0,0,.70) 0 2px, transparent 3px);
     opacity: 1;
 }
 
@@ -41,15 +43,12 @@
     z-index: 1;
     transform: translateX(-50%);
     pointer-events: none;
-    color: var(--sakura-light);
+    color: var(--sakura-silver);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: .24em;
     white-space: nowrap;
-    text-shadow:
-        0 0 7px var(--sakura-glow),
-        0 0 16px rgba(255,120,200,.48);
-    opacity: 1;
+    text-shadow: 0 0 7px rgba(255,255,255,.20);
 }
 
 [data-blog-variant="birthday-card"] .amino-reader-body > * {
@@ -64,14 +63,13 @@
     margin: 62px auto 36px !important;
     padding: 30px 18px 25px !important;
     border: 0 !important;
-    border-top: 2px solid var(--sakura-pink) !important;
-    border-bottom: 2px solid var(--sakura-pink) !important;
+    border-top: 2px solid var(--sakura-black) !important;
+    border-bottom: 2px solid var(--sakura-black) !important;
     border-radius: 0 !important;
-    background:
-        linear-gradient(90deg, transparent, rgba(255,120,200,.14), transparent) !important;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,.36), transparent) !important;
     box-shadow:
-        0 -5px 18px rgba(255,120,200,.10),
-        0 5px 18px rgba(255,120,200,.10) !important;
+        0 -5px 16px rgba(255,255,255,.06),
+        0 5px 16px rgba(0,0,0,.34) !important;
     color: var(--blog-text) !important;
     font-family: Georgia, "Times New Roman", serif !important;
     font-size: clamp(17px, 4.6vw, 22px) !important;
@@ -79,11 +77,8 @@
     line-height: 1.55 !important;
     letter-spacing: 0.075em !important;
     text-align: center !important;
-    text-decoration-thickness: 1px !important;
-    text-underline-offset: 6px !important;
     white-space: pre-line !important;
     text-wrap: balance !important;
-    text-shadow: 0 0 11px rgba(255,232,245,.22) !important;
 }
 
 [data-blog-variant="birthday-card"] .amino-content-heading::before {
@@ -93,17 +88,17 @@
     max-width: 96% !important;
     margin: -42px auto 18px !important;
     padding: 2px 13px !important;
-    background: var(--blog-bg) !important;
-    color: var(--sakura-light) !important;
+    background: var(--sakura-black) !important;
+    color: var(--sakura-silver) !important;
+    border-left: 1px solid var(--sakura-gray);
+    border-right: 1px solid var(--sakura-gray);
     font-family: Arial, sans-serif !important;
     font-size: 13px !important;
     font-weight: 800 !important;
     line-height: 1 !important;
-    letter-spacing: 0.10em !important;
+    letter-spacing: .10em !important;
     white-space: nowrap !important;
-    text-shadow:
-        0 0 6px var(--sakura-glow),
-        0 0 14px rgba(255,120,200,.55) !important;
+    text-shadow: 0 0 6px rgba(255,255,255,.20) !important;
 }
 
 [data-blog-variant="birthday-card"] .amino-content-heading::after {
@@ -113,17 +108,14 @@
     max-width: 96% !important;
     margin: 19px auto -37px !important;
     padding: 2px 13px !important;
-    background: var(--blog-bg) !important;
-    color: var(--sakura-gold) !important;
+    background: var(--sakura-black) !important;
+    color: var(--sakura-gray) !important;
     font-family: Arial, sans-serif !important;
     font-size: 12px !important;
     font-weight: 800 !important;
     line-height: 1 !important;
-    letter-spacing: 0.10em !important;
+    letter-spacing: .10em !important;
     white-space: nowrap !important;
-    text-shadow:
-        0 0 7px rgba(255,214,107,.48),
-        0 0 15px rgba(255,214,107,.28) !important;
 }
 
 /* ===== SEPARADORES ===== */
@@ -137,7 +129,7 @@
     padding: 0 !important;
     border: 0 !important;
     background: transparent !important;
-    color: var(--sakura-pink) !important;
+    color: var(--sakura-black) !important;
 }
 
 [data-blog-variant="birthday-card"] .amino-content-divider::before,
@@ -145,12 +137,12 @@
     content: "" !important;
     display: block !important;
     height: 2px !important;
-    background: linear-gradient(90deg, transparent, var(--sakura-pink)) !important;
-    box-shadow: 0 0 9px var(--sakura-glow) !important;
+    background: linear-gradient(90deg, transparent, var(--sakura-black)) !important;
+    box-shadow: 0 0 8px rgba(255,255,255,.08) !important;
 }
 
 [data-blog-variant="birthday-card"] .amino-content-divider::after {
-    background: linear-gradient(90deg, var(--sakura-pink), transparent) !important;
+    background: linear-gradient(90deg, var(--sakura-black), transparent) !important;
 }
 
 [data-blog-variant="birthday-card"] .amino-content-divider span {
@@ -163,14 +155,14 @@
 [data-blog-variant="birthday-card"] .amino-content-divider span::before {
     content: "❀  ✦  ♡  ✦  ❀" !important;
     display: block !important;
-    color: var(--sakura-light) !important;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--sakura-black);
+    color: var(--sakura-silver) !important;
     font-size: 15px !important;
     font-weight: 800 !important;
     line-height: 1 !important;
-    letter-spacing: 0.18em !important;
-    text-shadow:
-        0 0 7px var(--sakura-glow),
-        0 0 14px rgba(255,120,200,.48) !important;
+    letter-spacing: .18em !important;
 }
 
 /* ===== CITAS ===== */
@@ -179,13 +171,14 @@
     width: min(88%, 390px) !important;
     margin: 56px auto !important;
     padding: 34px 24px 31px !important;
-    border: 2px solid var(--sakura-pink) !important;
+    border: 2px solid var(--sakura-black) !important;
     border-radius: 5px !important;
-    background: color-mix(in srgb, var(--blog-surface) 86%, transparent) !important;
+    background: linear-gradient(180deg, rgba(8,8,8,.90), rgba(24,24,24,.88)) !important;
+    color: var(--blog-text) !important;
     box-shadow:
-        inset 0 0 0 5px rgba(255,120,200,.10),
-        0 0 22px rgba(255,120,200,.20),
-        0 8px 24px rgba(0,0,0,.14) !important;
+        inset 0 0 0 5px rgba(255,255,255,.035),
+        0 0 22px rgba(0,0,0,.38),
+        0 8px 24px rgba(0,0,0,.20) !important;
 }
 
 [data-blog-variant="birthday-card"] .amino-content-quote::before {
@@ -194,30 +187,28 @@
     width: max-content !important;
     margin: -46px auto 20px !important;
     padding: 3px 13px !important;
-    background: var(--blog-bg) !important;
-    color: var(--sakura-light) !important;
+    background: var(--sakura-black) !important;
+    color: var(--sakura-silver) !important;
+    border-left: 1px solid var(--sakura-gray);
+    border-right: 1px solid var(--sakura-gray);
     font-size: 12px !important;
     font-weight: 800 !important;
     line-height: 1 !important;
-    letter-spacing: 0.12em !important;
+    letter-spacing: .12em !important;
     text-align: center !important;
-    text-shadow:
-        0 0 7px var(--sakura-glow),
-        0 0 14px rgba(255,120,200,.50) !important;
 }
 
 [data-blog-variant="birthday-card"] .amino-content-quote::after {
     content: "୨ৎ  ⋆  ❀  ⋆  ୨ৎ" !important;
     display: block !important;
     margin-top: 20px !important;
-    color: var(--sakura-gold) !important;
+    color: var(--sakura-gray) !important;
     font-size: 12px !important;
     font-weight: 800 !important;
     line-height: 1 !important;
-    letter-spacing: 0.18em !important;
+    letter-spacing: .18em !important;
     text-align: center !important;
     white-space: nowrap !important;
-    text-shadow: 0 0 8px rgba(255,214,107,.48) !important;
 }
 
 /* ===== FRASES CENTRADAS / INDICE ===== */
@@ -229,34 +220,30 @@
     content: "✿";
     display: block;
     margin: 0 auto 10px;
-    color: var(--sakura-light);
+    color: var(--sakura-silver);
     font-size: 16px;
     font-weight: 800;
     line-height: 1;
     text-align: center;
-    text-shadow:
-        0 0 7px var(--sakura-glow),
-        0 0 14px rgba(255,120,200,.48);
 }
 
 [data-blog-variant="birthday-card"] .amino-content-paragraph.amino-align-center::after {
     content: "✦  ♡  ✦";
     display: block;
     margin: 11px auto 0;
-    color: var(--sakura-gold);
+    color: var(--sakura-gray);
     font-size: 12px;
     font-weight: 800;
     line-height: 1;
     letter-spacing: .18em;
     text-align: center;
-    text-shadow: 0 0 7px rgba(255,214,107,.42);
 }
 
-/* Detalles de esquina que recuerdan una carta magica, sin tocar imagenes. */
 [data-blog-variant="birthday-card"] .amino-content-heading:nth-of-type(odd) {
     background-image:
-        radial-gradient(circle at 3% 50%, rgba(255,120,200,.55) 0 3px, transparent 4px),
-        radial-gradient(circle at 97% 50%, rgba(255,214,107,.42) 0 3px, transparent 4px) !important;
+        radial-gradient(circle at 3% 50%, rgba(0,0,0,.88) 0 3px, transparent 4px),
+        radial-gradient(circle at 97% 50%, rgba(130,130,130,.38) 0 3px, transparent 4px),
+        linear-gradient(90deg, transparent, rgba(0,0,0,.36), transparent) !important;
 }
 
 /* Intencionalmente NO hay reglas para .amino-content-banner ni img. */
