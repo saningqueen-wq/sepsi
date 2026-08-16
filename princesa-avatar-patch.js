@@ -1,7 +1,7 @@
 (function () {
     "use strict";
 
-    const PRINCESA_AVATAR = "img/princesa-avatar.jpg";
+    const PRINCESA_AVATAR = "img/15228476856ed85cdc6d585b92c87b27.jpg";
 
     function applyPrincessAvatar() {
         document.querySelectorAll("#comments .comment").forEach(function (comment) {
@@ -18,19 +18,9 @@
         });
 
         document.querySelectorAll("#wiki .wiki-card:not(.new-wiki) img").forEach(function (image) {
-            image.addEventListener("error", function () {
-                image.src = PRINCESA_AVATAR;
-            }, { once: true });
-        });
-
-        document.querySelectorAll("#wiki .wiki-card:not(.new-wiki)").forEach(function (card) {
-            const label = card.querySelector("span");
-            const image = card.querySelector("img");
-
-            if (label && image && /sobre ella/i.test(label.textContent || "")) {
-                image.src = PRINCESA_AVATAR;
-                image.alt = "Princesa";
-            }
+            image.src = PRINCESA_AVATAR;
+            image.alt = "Imagen de princesa";
+            image.onerror = null;
         });
     }
 
