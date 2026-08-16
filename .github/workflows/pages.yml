@@ -47,9 +47,13 @@ jobs:
             printf '\n\n/* Fondo.jpg como photocard */\n' >> "${site_path}/blog-editor.css"
             cat "${site_path}/photocard-fix.css" >> "${site_path}/blog-editor.css"
           fi
-          if [ -f "${site_path}/blog-editor.css" ] && [ -f "${site_path}/happy-birthday-decoration.css" ]; then
-            printf '\n\n/* Decoracion Amino para Happy Birthday */\n' >> "${site_path}/blog-editor.css"
-            cat "${site_path}/happy-birthday-decoration.css" >> "${site_path}/blog-editor.css"
+
+      - name: Cargar decoracion de Happy Birthday
+        run: |
+          if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/happy-birthday-decoration.css" ]; then
+            if ! grep -q 'happy-birthday-decoration.css' "${site_path}/index.html"; then
+              sed -i '/<\/head>/i\    <link rel="stylesheet" href="happy-birthday-decoration.css?v=4">' "${site_path}/index.html"
+            fi
           fi
 
       - name: Activar guardado en la nube
