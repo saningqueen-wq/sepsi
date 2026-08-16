@@ -1,0 +1,4 @@
+/* Quita la fila de banderas/reacciones de la biografía. */
+.bio-reactions {
+    display: none !important;
+}
