@@ -11,6 +11,7 @@
         "amino-blog-drafts-v2",
         "amino-comments",
         "amino-bio",
+        "amino-bio-photos-v1",
         "theme-accent",
         "theme-bg"
     ];
