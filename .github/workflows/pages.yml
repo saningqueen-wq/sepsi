@@ -84,6 +84,14 @@ jobs:
             fi
           fi
 
+      - name: Corregir lectura de imagenes del editor
+        run: |
+          if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/blog-image-format-fix.js" ]; then
+            sed -i 's#accept="image/png,image/jpeg,image/webp"#accept="image/*,.jpg,.jpeg,.png,.webp,.avif,.gif,.bmp,.heic,.heif"#g' "${site_path}/index.html"
+            sed -i '/blog-image-format-fix.js/d' "${site_path}/index.html"
+            sed -i '/<script src="blog-editor.js"><\/script>/i\<script src="blog-image-format-fix.js?v=1"><\/script>' "${site_path}/index.html"
+          fi
+
       - name: Cargar texto actualizado de Happy Birthday
         run: |
           if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/happy-birthday-text-patch.js" ]; then
