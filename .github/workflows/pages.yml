@@ -126,6 +126,13 @@ jobs:
             sed -i '/<script src="save-me-storm-patch.js?v=1"><\/script>/a\<script src="mr-jealous-text-patch.js?v=1"><\/script>' "${site_path}/index.html"
           fi
 
+      - name: Activar fotos editables de la biografia
+        run: |
+          if [ -f "${site_path}/index.html" ] && [ -f "${site_path}/bio-photo-editor.js" ]; then
+            sed -i '/bio-photo-editor.js/d' "${site_path}/index.html"
+            sed -i '/<script src="mr-jealous-text-patch.js?v=1"><\/script>/a\<script src="bio-photo-editor.js?v=1"><\/script>' "${site_path}/index.html"
+          fi
+
       - name: Subir sitio
         uses: actions/upload-pages-artifact@v3
         with:
