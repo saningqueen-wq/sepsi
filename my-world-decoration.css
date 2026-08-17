@@ -1,5 +1,5 @@
 /* Decoracion exclusiva para My World With You.
-   Estilo cielo/constelaciones. No toca banners, imagenes ni contenido.
+   Estilo cielo/constelaciones.
    Todas las decoraciones usan el mismo celeste. */
 
 [data-blog-variant="constellation"] {
@@ -88,7 +88,6 @@
     letter-spacing: .14em;
 }
 
-/* Puntos como pequeñas estrellas en las esquinas. */
 [data-blog-variant="constellation"] .amino-content-heading {
     background-image:
         radial-gradient(circle at 11px 11px, var(--world-sky) 0 1.5px, transparent 2px),
@@ -176,7 +175,7 @@
     text-shadow: 0 0 8px var(--world-glow) !important;
 }
 
-/* ===== PARRAFOS: DETALLE MINIMO PARA QUE NO PAREZCAN HAPPY BIRTHDAY ===== */
+/* ===== PARRAFOS ===== */
 [data-blog-variant="constellation"] .amino-content-paragraph {
     position: relative;
 }
@@ -192,11 +191,64 @@
     opacity: .82;
 }
 
-/* Intencionalmente no hay reglas para banners ni imagenes. */
+/* ===== IMAGENES: CENTRADAS, PAREJAS Y SIN HUECOS ENORMES ===== */
+[data-blog-variant="constellation"] .amino-content-banner {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    width: min(78%, 360px) !important;
+    max-width: 360px !important;
+    margin: 30px auto 34px !important;
+    padding: 7px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(114, 217, 255, .30) !important;
+    border-radius: 14px !important;
+    background: rgba(114, 217, 255, .035) !important;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .08) !important;
+    transform: none !important;
+}
 
-/* ===== CELULAR: EL LECTOR OCUPA TODA LA PANTALLA =====
-   El lector general tenia un maximo de 470px. En telefonos/pantallas angostas
-   My World ahora usa el ancho completo sin agrandar banners ni imagenes internas. */
+[data-blog-variant="constellation"] .amino-content-banner img {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 280px !important;
+    margin: 0 auto !important;
+    border-radius: 9px !important;
+    aspect-ratio: auto !important;
+    object-fit: contain !important;
+    transform: none !important;
+}
+
+/* Las imagenes libres se ven como pequeñas postales centradas. */
+[data-blog-variant="constellation"] .amino-content-banner.amino-content-image-free {
+    width: min(58%, 250px) !important;
+    max-width: 250px !important;
+    margin: 26px auto 30px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 10px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+[data-blog-variant="constellation"] .amino-content-banner.amino-content-image-free img {
+    width: auto !important;
+    max-width: 100% !important;
+    max-height: 220px !important;
+    margin: 0 auto !important;
+    border-radius: 8px !important;
+    object-fit: contain !important;
+}
+
+[data-blog-variant="constellation"] .amino-content-banner + .amino-content-banner {
+    margin-top: 18px !important;
+}
+
+/* ===== CELULAR: EL LECTOR OCUPA TODA LA PANTALLA ===== */
 @media (max-width: 900px) {
     .modal-blog.amino-reader[data-blog-variant="constellation"] {
         width: 100vw !important;
@@ -222,6 +274,16 @@
         padding-left: 16px !important;
         padding-right: 16px !important;
     }
+
+    [data-blog-variant="constellation"] .amino-content-banner {
+        width: min(82%, 340px) !important;
+        margin: 26px auto 30px !important;
+    }
+
+    [data-blog-variant="constellation"] .amino-content-banner.amino-content-image-free {
+        width: min(62%, 250px) !important;
+        margin: 24px auto 28px !important;
+    }
 }
 
 @media (max-width: 520px) {
@@ -239,5 +301,18 @@
 
     [data-blog-variant="constellation"] .amino-content-divider {
         width: 90% !important;
+    }
+
+    [data-blog-variant="constellation"] .amino-content-banner {
+        width: 84% !important;
+        max-width: 330px !important;
+        padding: 5px !important;
+        margin-block: 24px 28px !important;
+    }
+
+    [data-blog-variant="constellation"] .amino-content-banner.amino-content-image-free {
+        width: 66% !important;
+        max-width: 240px !important;
+        padding: 0 !important;
     }
 }
